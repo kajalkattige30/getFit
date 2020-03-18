@@ -1,40 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
+const mongoClient = require('mongodb').MongoClient;
 
+const url = "mongodb+srv://Janhavi:mongodb@projectcluster-azpnv.mongodb.net/test?retryWrites=true&w=majority";
 
-const uri = "mongodb+srv://Janhavi:mongodb@projectcluster-azpnv.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-client.connect(err => {
-  const col = client.db("ProjectDB").collection("user");
-  console.log(col)
-  
-  // perform actions on the collection object
-  client.close();
-});
-MongoClient.connect(uri, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("ProjectDB");
-    dbo.collection("user").toArray(function(err, result) {
-      if (err) throw err;
-      newUsers = result
-      console.log(result[0]);
-      db.close();
-    });
-  });
+mongoClient.connect(url, (err,db)=>{
+    if(err){
+        console.log('Error while connecting mongoClient')
+    }
+    else{
+        const myDB = db.db('ProjectDB')
+        const collection = myDB.collection('user')
 
-router.get('/', (req,res,next) => {
+        router.post('/', (req,res)=>{
+            console.log('at signup')
+            const newUser = {
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password
+            }
 
-    res.status(200).json({
-        message: 'Handling GET requests to /signup',
-        
-    });
-});
-var newUsers = ""
-router.post('/', (req,res,next) => {
-    res.status(201).json({
-        message: 'Handling POST requests to /signup',
-        
-    });
-});
+            const query = { email: newUser.email }
+            collection.findOne(query, (err,result)=>{
+                if(result == null){
+                    collection.insertOne(newUser,(err,result)=>{
+                        res.status(200).send()
+                        console.log('Sign up successful')
+                    })
+                }
+                else{
+                    console.log('Already Registered')
+                    res.status(400).send()
+                }
+            })
+        })
+
+    }
+})
 module.exports = router;

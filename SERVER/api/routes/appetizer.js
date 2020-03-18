@@ -7,7 +7,7 @@ const uri = "mongodb+srv://Janhavi:mongodb@projectcluster-azpnv.mongodb.net/test
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   const collection = client.db("ProjectDB").collection("Appetizers");
-  console.log(collection)
+  // console.log(collection)
   
   // perform actions on the collection object
   client.close();
@@ -17,9 +17,9 @@ MongoClient.connect(uri, function(err, db) {
     var dbo = db.db("ProjectDB");
     dbo.collection("Appetizers").find({category:"Veg"}).toArray(function(err, result) {
       if (err) throw err;
-      console.log("THis is the food inside get result :")
+      // console.log("THis is the food inside get result :")
       food = result[0]
-      console.log(result[0]);
+      // console.log(result[0]);
       db.close();
     });
   });
