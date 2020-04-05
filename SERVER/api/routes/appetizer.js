@@ -49,4 +49,14 @@ router.post('/', (req,res,next) => {
         createdAppetizer: food
     });
 });
+
+const json2csv = require('json2csv').parse;
+const fs = require('fs');
+const fields = ['category'];
+const csv = json2csv({ data: food, fields: fields });
+
+fs.writeFile('file.csv', csv, function(err) {
+if (err) throw err;
+console.log('file saved');
+});
 module.exports = router;
