@@ -13,23 +13,23 @@ mongoClient.connect(url, (err,db)=>{
 
         router.put('/:email', (req,res) => {
             const existingUser = {
-                email = req.body.email,
-                height = req.body.height,
-                current_weight = req.body.current_weight,
-                activity_level = req.body.activity_level,
-                gender = req.body.gender,
-                age = req.body.age,
-                goal_weight = req.body.goal_weight
+                email : req.body.email,
+                height : req.body.height,
+                current_weight : req.body.current_weight,
+                activity_level : req.body.activity_level,
+                gender : req.body.gender,
+                age : req.body.age,
+                goal_weight : req.body.goal_weight
             }
             existingUser = user.findById(req.params.email)
             const updatedDetails = {
-                email = existingUser.email,
-                height = existingUser.height,
-                current_weight = existingUser.current_weight,
-                activity_level = existingUser.activity_level,
-                gender = existingUser.gender,
-                age = existingUser.age,
-                goal_weight = existingUser.goal_weight
+                email : existingUser.email,
+                height : existingUser.height,
+                current_weight : existingUser.current_weight,
+                activity_level : existingUser.activity_level,
+                gender : existingUser.gender,
+                age : existingUser.age,
+                goal_weight : existingUser.goal_weight
             }
             res.status(200).send(JSON.stringify(updatedDetails))
             if(existingUser == null){
