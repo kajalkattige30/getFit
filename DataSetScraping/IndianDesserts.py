@@ -149,7 +149,7 @@ def scrapDataType2(page_soup):
             recipe_categories.add('Non-Veg')
         if('egg' in text):
             recipe_categories.add('Egg') 
-            recipe_categories.add('Non_Veg')      
+            recipe_categories.add('Non-Veg')      
         ingredients.append(text)
 
     ingredients.pop()
