@@ -22,8 +22,11 @@ mongoClient.connect(url, (err,db)=>{
                 age : req.body.age,
                 goal_weight : req.body.goal_weight
             }
-            existingUser = user.findById(req.params.email)
+            console.log(existingUser)
+            // existingUser = user.findById(req.params.email)
+
             const addedDetails = {
+                email : req.body.email,
                 height : existingUser.height,
                 current_weight : existingUser.current_weight,
                 activity_level : existingUser.activity_level,
