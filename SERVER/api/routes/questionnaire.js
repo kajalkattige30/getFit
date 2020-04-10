@@ -24,19 +24,29 @@ mongoClient.connect(url, (err,db)=>{
             }
             console.log(existingUser)
             existingUser = user.findById(req.params.email)
+            if(existingUser != null){
 
-            const addedDetails = {
-                email : req.body.email,
-                height : existingUser.height,
-                current_weight : existingUser.current_weight,
-                activity_level : existingUser.activity_level,
-                gender : existingUser.gender,
-                age : existingUser.age,
-                goal_weight : existingUser.goal_weight
-            }
-            collection.insertOne(addedDetails)
-            res.status(200).send(JSON.stringify(addedDetails))
-            if(existingUser == null){
+                const addedDetails = {
+                    email : req.body.email,
+                    height : existingUser.height,
+                    current_weight : existingUser.current_weight,
+                    activity_level : existingUser.activity_level,
+                    gender : existingUser.gender,
+                    age : existingUser.age,
+                    goal_weight : existingUser.goal_weight,
+                    bmi : existingUser.bmi,
+                    bmr : existingUser.bmr,
+                    calorieCount : existingUser.calorieCount
+                }
+                collection.updateOne(addedDetails)
+                res.status(200).send(JSON.stringify(addedDetails))
+            
+            router.get('/:email',(req,res) => {
+                res.status(200).send(JSON.stringify(addedDetails))
+
+            })
+        }
+            else{
                 console.log("User doesn't exist!")
                 res.redirect('/')
             }
