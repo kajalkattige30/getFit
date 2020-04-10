@@ -15,11 +15,11 @@ client.connect(err => {
 MongoClient.connect(uri, function(err, db) {
     if (err) throw err;
     var dbo = db.db("ProjectDB");
-    dbo.collection("Appetizers").find({category:"Veg"}).toArray(function(err, result) {
+    dbo.collection("Appetizers").find({}).toArray(function(err, result) {
       if (err) throw err;
       // console.log("THis is the food inside get result :")
       food = result[0]
-      // console.log(result[0]);
+      console.log(result[0]);
       db.close();
     });
   });
@@ -52,7 +52,7 @@ router.post('/', (req,res,next) => {
 
 const json2csv = require('json2csv').parse;
 const fs = require('fs');
-const fields = ['category'];
+var fields;
 const csv = json2csv({ data: food, fields: fields });
 
 fs.writeFile('file.csv', csv, function(err) {

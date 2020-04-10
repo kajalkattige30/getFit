@@ -23,7 +23,7 @@ mongoClient.connect(url, (err,db)=>{
                 goal_weight : req.body.goal_weight
             }
             console.log(existingUser)
-            // existingUser = user.findById(req.params.email)
+            existingUser = user.findById(req.params.email)
 
             const addedDetails = {
                 email : req.body.email,
@@ -34,6 +34,7 @@ mongoClient.connect(url, (err,db)=>{
                 age : existingUser.age,
                 goal_weight : existingUser.goal_weight
             }
+            collection.insertOne(addedDetails)
             res.status(200).send(JSON.stringify(addedDetails))
             if(existingUser == null){
                 console.log("User doesn't exist!")

@@ -31,6 +31,8 @@ mongoClient.connect(url, (err,db)=>{
                 age : existingUser.age,
                 goal_weight : existingUser.goal_weight
             }
+            collection.insertOne(updateDetails)
+
             res.status(200).send(JSON.stringify(updatedDetails))
             if(existingUser == null){
                 console.log("User doesn't exist!")
