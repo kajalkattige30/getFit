@@ -11,7 +11,7 @@ mongoClient.connect(url, (err,db)=>{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
 
-        router.put('/:email', (req,res) => {
+        router.put('/', (req,res) => {
             const existingUser = {
                 email : req.body.email,
                 height : req.body.height,
@@ -19,35 +19,50 @@ mongoClient.connect(url, (err,db)=>{
                 activity_level : req.body.activity_level,
                 gender : req.body.gender,
                 age : req.body.age,
-                goal_weight : req.body.goal_weight
+                goal_weight : req.body.goal_weight,
+                bmi : req.body.bmi,
+                bmr : req.body.bmr,
+                calorieCount : req.body.calorieCount
             }
-            existingUser = user.findById(req.params.email)
-            if(existingUser != null){
+            console.log(existingUser)
+            const query = {email : existingUser.email}
+            var updatedDetails = { $set: {height: existingUser.height,
+                                          current_weight : existingUser.current_weight,
+                                          activity_level: existingUser.activity_level,
+                                          gender: existingUser.gender,
+                                          age: existingUser.age,
+                                          goal_weight: existingUser.goal_weight,
+                                           
 
-            
-                const updatedDetails = {
-                    email : existingUser.email,
-                    height : existingUser.height,
-                    current_weight : existingUser.current_weight,
-                    activity_level : existingUser.activity_level,
-                    gender : existingUser.gender,
-                    age : existingUser.age,
-                    goal_weight : existingUser.goal_weight,
-                    bmi : existingUser.bmi,
-                    bmr : existingUser.bmr,
-                    calorieCount : existingUser.calorieCount
-                }
-                collection.updateOne(updateDetails)
-
-                res.status(200).send(JSON.stringify(updatedDetails))
-        }
-            else{
-                console.log("User doesn't exist!")
-                res.redirect('/')
             }
+
+            }
+            collection.updateOne(query, updatedDetails, function(err,res){
+                if(err) throw err;
+                console.log("Details updated!")
+                db.close();
+            });
+            router.get('/',(req,res) =>{
+                    res.status(200).json({
+                        email : existingUser.email,
+                        height :  existingUser.height,
+                        current_weight : existingUser.current_weight,
+                        activity_level : existingUser.activity_level,
+                        gender : existingUser.gender,
+                        age : existingUser.age,
+                        goal_weight : existingUser.goal_weight,
+                        bmi : existingUser.bmi,
+                        bmr : existingUser.bmr,
+                        calorieCount : existingUser.calorieCount
+
+                    });
+                    
+                
+            });
+            res.status(200).send(JSON.stringify(existingUser))
 
         })
     }
-});
+})
 module.exports = router;
 
