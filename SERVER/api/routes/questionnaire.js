@@ -27,34 +27,51 @@ mongoClient.connect(url, (err,db)=>{
             }
             console.log(existingUser)
             const query = {email : existingUser.email}
-            collection.findOne(query, (err,result)=>{
-                if(result != null){
-                    
-                const addedDetails = {
-                    email : req.body.email,
-                    height : existingUser.height,
-                    current_weight : existingUser.current_weight,
-                    activity_level : existingUser.activity_level,
-                    gender : existingUser.gender,
-                    age : existingUser.age,
-                    goal_weight : existingUser.goal_weight,
-                    bmi : existingUser.bmi,
-                    bmr : existingUser.bmr,
-                    calorieCount : existingUser.calorieCount
-                }
-                //collection.updateOne(addedDetails)
-                res.status(200).send(JSON.stringify(addedDetails))
-            
-                // router.get('/:email',(req,res) => {
-                //      res.status(200).send(JSON.stringify(addedDetails))
 
-                // })
-                }
-                else{
-                    console.log("User doesn't exist!")
-                    res.redirect('/')
-                }
-            })
+            var detailsToAdd = { $set: {height: existingUser.height,
+                                        current_weight: existingUser.current_weight,
+                                        activity_level : existingUser.activity_level,
+                                        gender : existingUser.gender,
+                                        age : existingUser.age,
+                                        goal_weight : existingUser.goal_weight,
+                                        bmi : existingUser.bmi,
+                                        bmr : existingUser.bmr,
+                                        calorieCount : existingUser.calorieCount } };
+            collection.updateOne(query, detailsToAdd, function(err, res) {
+              if (err) throw err;
+              console.log("Details Added");
+              db.close();
+            });
+
+            // collection.updateOne()
+            // collection.findOne(query, (err,result)=>{
+            //     if(result != null){
+                    
+            //     const addedDetails = {
+            //         email : req.body.email,
+            //         height : existingUser.height,
+            //         current_weight : existingUser.current_weight,
+            //         activity_level : existingUser.activity_level,
+            //         gender : existingUser.gender,
+            //         age : existingUser.age,
+            //         goal_weight : existingUser.goal_weight,
+            //         bmi : existingUser.bmi,
+            //         bmr : existingUser.bmr,
+            //         calorieCount : existingUser.calorieCount
+            //     }
+            //     collection.update()
+            //     res.status(200).send(JSON.stringify(addedDetails))
+            
+            //     // router.get('/:email',(req,res) => {
+            //     //      res.status(200).send(JSON.stringify(addedDetails))
+
+            //     // })
+            //     }
+            //     else{
+            //         console.log("User doesn't exist!")
+            //         res.redirect('/')
+            //     }
+            // })
         })
     }
 })
