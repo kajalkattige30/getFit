@@ -12,7 +12,7 @@ mongoClient.connect(url, (err,db)=>{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
 
-        router.post('/:email', (req,res) =>{
+        router.post('/', (req,res) =>{
             const existingUser = {
                 email : req.body.email,
                 height : req.body.height,
@@ -20,7 +20,10 @@ mongoClient.connect(url, (err,db)=>{
                 activity_level : req.body.activity_level,
                 gender : req.body.gender,
                 age : req.body.age,
-                goal_weight : req.body.goal_weight
+                goal_weight : req.body.goal_weight,
+                bmi : req.body.bmi,
+                bmr : req.body.bmr,
+                calorieCount : req.body.calorieCount
             }
             console.log(existingUser)
             const query = {email : existingUser.email}
@@ -39,13 +42,13 @@ mongoClient.connect(url, (err,db)=>{
                     bmr : existingUser.bmr,
                     calorieCount : existingUser.calorieCount
                 }
-                collection.updateOne(addedDetails)
+                //collection.updateOne(addedDetails)
                 res.status(200).send(JSON.stringify(addedDetails))
             
-                router.get('/:email',(req,res) => {
-                     res.status(200).send(JSON.stringify(addedDetails))
+                // router.get('/:email',(req,res) => {
+                //      res.status(200).send(JSON.stringify(addedDetails))
 
-                })
+                // })
                 }
                 else{
                     console.log("User doesn't exist!")
