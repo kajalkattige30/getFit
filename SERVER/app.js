@@ -9,6 +9,7 @@ const userSignupRoutes = require('./api/routes/signup');
 const userLoginRoutes = require('./api/routes/login');
 const userProfileRoutes = require('./api/routes/profile');
 const userDetailRoutes = require('./api/routes/questionnaire');
+const homeFragmentRoutes = require('./api/routes/getInfo');
 
 app.use(express.json())
 
@@ -21,6 +22,7 @@ app.use('/signup',userSignupRoutes);
 app.use('/login',userLoginRoutes);
 app.use('/profile',userProfileRoutes);
 app.use('/questionnaire',userDetailRoutes);
+app.use('/getInfo',homeFragmentRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');

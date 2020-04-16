@@ -19,7 +19,7 @@ MongoClient.connect(uri, function(err, db) {
       if (err) throw err;
       // console.log("THis is the food inside get result :")
       food = result[0]
-      console.log(result[0]);
+      //console.log(result[0]);
       db.close();
     });
   });
