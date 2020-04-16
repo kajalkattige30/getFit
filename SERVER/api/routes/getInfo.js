@@ -11,10 +11,9 @@ mongoClient.connect(url, (err,db)=>{
     else{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
-        router.get('/calorieMacros', (req,res) => {
+        router.get('/calorieMacros/:email', (req,res) => {
             const userCalorieInfo = {
-                email: req.body.email,
-                
+                email: req.params.email,
             }
           
             console.log(userCalorieInfo)
@@ -89,16 +88,20 @@ mongoClient.connect(url, (err,db)=>{
 
         })
         
-        
+        router.get('/addMeal/:email',(req,res) =>{
+            // const query = {email : req.params.email}
+            // print(query)
+            collection.find({}).toArray((err,result)=>{
+                // data = result
+                console.log(result)
+                res.status(200).send(JSON.stringify(result))
+            })
+
+            
+        })
         
     }
 })
-        
-
-        
-            
-
-
 
 
 module.exports = router;
