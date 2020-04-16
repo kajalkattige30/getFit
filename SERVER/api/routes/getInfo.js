@@ -16,17 +16,76 @@ mongoClient.connect(url, (err,db)=>{
                 email: req.body.email,
                 
             }
+          
             console.log(userCalorieInfo)
             const query = {email: userCalorieInfo.email}
             var data = ""
-            myDB.collection('user').find(query).toArray(function(err,result){
+            var carbs = ""
+            var proteins = ""
+            var fats = ""
+            var carbsg = ""
+            var proteinsg = ""
+            var fatsg = ""
+            var macros = ""
+            myDB.collection('user').find(query, {projection: {_id:0,current_weight:1 , goal_weight:1, calorieCount:1}}).toArray(function(err,result){
                 //if(err) throw err;
-                data = result
+                
+                data = Object.assign({},result[0])
+                console.log(data)
+                if(data.current_weight == data.goal_weight){
+                    carbs = 0.55*data.calorieCount
+                    proteins = 0.2*data.calorieCount
+                    fats = 0.25*data.calorieCount
+                    carbsg = carbs/4.1
+                    proteinsg = proteins/4.1
+                    fatsg = fats/8.8
+                    macros = {
+                        cal : data.calorieCount,
+                        c : carbsg,
+                        p : proteinsg,
+                        f : fatsg
+                    }
+                    console.log(macros)
 
-                console.log(result)
+                }
+                if(data.current_weight > data.goal_weight){
+                    carbs = 0.4*data.calorieCount
+                    proteins = 0.3*data.calorieCount
+                    fats = 0.25*data.calorieCount
+                    carbsg = carbs/4.1
+                    proteinsg = proteins/4.1
+                    fatsg = fats/8.8
+                    macros = {
+                        cal : data.calorieCount,
+
+                        c : carbsg,
+                        p : proteinsg,
+                        f : fatsg
+                    }
+                    console.log(macros)
+                }
+                if(data.current_weight < data.goal_weight){
+                    carbs = 0.6*data.calorieCount
+                    proteins = 0.2*data.calorieCount
+                    fats = 0.2*data.calorieCount
+                    carbsg = carbs/4.1
+                    proteinsg = proteins/4.1
+                    fatsg = fats/8.8
+                    macros = {
+                        cal : data.calorieCount,
+
+                        c : carbsg,
+                        p : proteinsg,
+                        f : fatsg
+                    }
+                    console.log(macros)
+                    res.status(200).send(JSON.stringify(macros))
+
+                }
                 db.close();
             })
-            res.status(200).send(JSON.stringify(data))
+            console.log(macros)
+
 
         })
         
