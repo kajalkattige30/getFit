@@ -19,7 +19,7 @@ mongoClient.connect(url, (err,db)=>{
             console.log(userCalorieInfo)
             const query = {email: userCalorieInfo.email}
             var data = ""
-            myDB.collection('user').find({query}).toArray(function(err,result){
+            myDB.collection('user').find(query).toArray(function(err,result){
                 //if(err) throw err;
                 data = result
 
