@@ -10,6 +10,9 @@ const userLoginRoutes = require('./api/routes/login');
 const userProfileRoutes = require('./api/routes/profile');
 const userDetailRoutes = require('./api/routes/questionnaire');
 const homeFragmentRoutes = require('./api/routes/getInfo');
+const searchRoutes = require('./api/routes/search');
+const addMealRoutes = require('./api/routes/addMeal');
+const getMealRoutes = require('./api/routes/getMeal')
 
 app.use(express.json())
 
@@ -23,6 +26,9 @@ app.use('/login',userLoginRoutes);
 app.use('/profile',userProfileRoutes);
 app.use('/questionnaire',userDetailRoutes);
 app.use('/getInfo',homeFragmentRoutes);
+app.use('/search',searchRoutes);
+app.use('/addMeal',addMealRoutes);
+app.use('/getMeal',getMealRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');

@@ -28,6 +28,10 @@ mongoClient.connect(url, (err,db)=>{
             console.log(existingUser)
             const query = {email : existingUser.email}
 
+            breakfastMeals = []
+            lunchMeals = []
+            dinnerMeals = []
+
             var detailsToAdd = { $set: {height: existingUser.height,
                                         current_weight: existingUser.current_weight,
                                         activity_level : existingUser.activity_level,
@@ -36,7 +40,10 @@ mongoClient.connect(url, (err,db)=>{
                                         goal_weight : existingUser.goal_weight,
                                         bmi : existingUser.bmi,
                                         bmr : existingUser.bmr,
-                                        calorieCount : existingUser.calorieCount } };
+                                        calorieCount : existingUser.calorieCount,
+                                        breakfastMeals : breakfastMeals,
+                                        lunchMeals : lunchMeals,
+                                        dinnerMeals : dinnerMeals } };
             collection.updateOne(query, detailsToAdd, function(err, res) {
               if (err) throw err;
               console.log("Details Added");
