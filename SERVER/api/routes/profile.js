@@ -14,6 +14,7 @@ mongoClient.connect(url, (err,db)=>{
         router.put('/', (req,res) => {
             const existingUser = {
                 email : req.body.email,
+                name : req.body.name,
                 height : req.body.height,
                 current_weight : req.body.current_weight,
                 activity_level : req.body.activity_level,
@@ -42,20 +43,28 @@ mongoClient.connect(url, (err,db)=>{
                 console.log("Details updated!")
                 db.close();
             });
-            router.get('/',(req,res) =>{
-                    res.status(200).json({
-                        email : existingUser.email,
-                        height :  existingUser.height,
-                        current_weight : existingUser.current_weight,
-                        activity_level : existingUser.activity_level,
-                        gender : existingUser.gender,
-                        age : existingUser.age,
-                        goal_weight : existingUser.goal_weight,
-                        bmi : existingUser.bmi,
-                        bmr : existingUser.bmr,
-                        calorieCount : existingUser.calorieCount
+            router.get('/:email',(req,res) =>{
+                    // res.status(200).json({
+                    //     email : existingUser.email,
+                    //     name : existingUser.name,
+                    //     height :  existingUser.height,
+                    //     current_weight : existingUser.current_weight,
+                    //     activity_level : existingUser.activity_level,
+                    //     gender : existingUser.gender,
+                    //     age : existingUser.age,
+                    //     goal_weight : existingUser.goal_weight,
+                    //     bmi : existingUser.bmi,
+                    //     bmr : existingUser.bmr,
+                    //     calorieCount : existingUser.calorieCount
 
-                    });
+                    // });
+
+            const q = {email : req.params.email}
+            collection.find(q,function(err, ans) {
+                if(err) throw err;
+                console.log(ans)
+                db.close();
+            })
                     
                 
             });
