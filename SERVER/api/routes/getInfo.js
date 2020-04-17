@@ -88,18 +88,6 @@ mongoClient.connect(url, (err,db)=>{
 
         })
         
-        router.get('/addMeal/:email',(req,res) =>{
-            // const query = {email : req.params.email}
-            // print(query)
-            collection.find({}).toArray((err,result)=>{
-                // data = result
-                console.log(result)
-                res.status(200).send(JSON.stringify(result))
-            })
-
-            
-        })
-        
     }
 })
 
