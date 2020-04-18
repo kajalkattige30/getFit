@@ -14,23 +14,25 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
-from sklearn.neighbors import NearestNeighbors
-from scipy.sparse import csr_matrix
+# from sklearn.neighbors import NearestNeighbors
+# from scipy.sparse import csr_matrix
 import random
 from numpy.random import choice
 
 
 #Importing dataset
-dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
-
+# dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
+dataset = pd.read_csv("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
 
 #Creating PivotDatabase
 def createPivotDatabase(categories):
-  with open("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv",'r') as csv_file:
+  #C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv
+  with open("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/dataset.csv",'r') as csv_file:
       csv_reader = csv.reader(csv_file)
 
       next(csv_reader)
-      with open("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv",'w', newline = '', encoding='utf-8') as new_file:
+      #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv
+      with open("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/PivotDataset.csv",'w', newline = '', encoding='utf-8') as new_file:
         fieldnames = ['macronutrient','recipe_name','value']
         csv_writer = csv.DictWriter(new_file,fieldnames=fieldnames)
         csv_writer.writeheader()
@@ -47,26 +49,28 @@ def createPivotDatabase(categories):
               csv_writer.writerow(row)
 
 def getCorrelation(sample_fooditem):
-  pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
+  #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv
+  pivotdataset = pd.read_csv("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
   pivotdataset.drop_duplicates(keep = 'first', inplace = True)
   db_pivot = pivotdataset.pivot(index='macronutrient',columns='recipe_name').value
   macronutrient = db_pivot.index
   recipe_name = db_pivot.columns
-  db_pivot.to_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/pivot_table.csv")
+  #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/pivot_table.csv
+  db_pivot.to_csv("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/pivot_table.csv")
 
   similar_fooditem = db_pivot.corrwith(sample_fooditem)
   corr_fooditem = pd.DataFrame(similar_fooditem,columns=['pearsonR']).sort_values('pearsonR',ascending=False).head(10)
   return corr_fooditem
 
 # K-nearest Neighbors 
-def getKnn():
-  pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
-  pivotdataset.drop_duplicates(keep = 'first', inplace = True)
-  db_pivot = pivotdataset.pivot(index='recipe_name',columns='macronutrient', values = 'value')
-  db_features_matrix = csr_matrix(db_pivot.values)
-  model_knn = NearestNeighbors(metric = 'cosine', algorithm = 'brute')
-  query_index = np.random.choice(db_pivot.shape[0])
-  distance, indices = model_knn.kneighbors(db_pivot.iloc[query_index,:].values.reshape(1,-1), n_neighbors = 6)
+# def getKnn():
+#   pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
+#   pivotdataset.drop_duplicates(keep = 'first', inplace = True)
+#   db_pivot = pivotdataset.pivot(index='recipe_name',columns='macronutrient', values = 'value')
+#   db_features_matrix = csr_matrix(db_pivot.values)
+#   model_knn = NearestNeighbors(metric = 'cosine', algorithm = 'brute')
+#   query_index = np.random.choice(db_pivot.shape[0])
+#   distance, indices = model_knn.kneighbors(db_pivot.iloc[query_index,:].values.reshape(1,-1), n_neighbors = 6)
 
 #   for i in range(0, len(distance.flatten())):
 #     if i == 0:
@@ -96,6 +100,7 @@ dprotein = 0
 breakfastmenu = []
 lunchBreadMenu = []
 lunchDishMenu = []
+lunchRiceMenu = []
 dinnerBreadMenu = []
 dinnerDishMenu = []
 dinnerRiceMenu = []
@@ -103,24 +108,35 @@ dinnerRiceMenu = []
 #Sample User - this user data to be fetched from nodejs Server - only required Calories and plan type.
 
 def getReqCalories():
+  global requiredCalories
   gender = 'female'
   age = 21
-  height = 160
-  weight = 50
+  height = 180
+  weight = 80
   goal = 'gain-weight'
   pace = 'slow'
-  requiredCalories = 0
   if(gender == 'female'):
     requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) - 161
   else:
     requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) + 5
 
-  # print(requiredCalories)
-
 #Method 2
 #Randomly dividing total Calories into Breakfast, Lunch and Dinner Cals 
 #Giving more weightage to Lunch and Dinner
 def Method2():
+
+  global breakfastCals 
+  global lunchCals 
+  global dinnerCals 
+  global bcarbs 
+  global bfats 
+  global bprotein 
+  global lcarbs 
+  global lfats 
+  global lprotein 
+  global dcarbs 
+  global dfats 
+  global dprotein 
   
   r1 = random.randint(20,40)
   r2 = random.randint(20,40)
@@ -163,6 +179,19 @@ def Method2():
 #Considering nutrient ratio - 50%carbs, 30%fats and 20%protein
 def Method1():
 
+  global breakfastCals 
+  global lunchCals 
+  global dinnerCals 
+  global bcarbs 
+  global bfats 
+  global bprotein 
+  global lcarbs 
+  global lfats 
+  global lprotein 
+  global dcarbs 
+  global dfats 
+  global dprotein 
+
   #Equally dividing calories for the three meals
   breakfastCals = (1/5)*requiredCalories;
   lunchCals = (2/5)*requiredCalories;
@@ -200,6 +229,7 @@ def Method1():
 
 #Breakfast Recommendation
 def getBreakfast():
+  global breakfastmenu
 
   bcarbs_g = bcarbs/4.1
   bfats_g = bfats/8.8
@@ -222,7 +252,9 @@ def getBreakfast():
 
 #Lunch Recommendation 
 def getLunch():
-  
+  global lunchBreadMenu 
+  global lunchDishMenu 
+  global lunchRiceMenu 
   # lunchRiceMenu = []
   # prob_bread_curry = 0.5
   # prob_rice_dish = 0.5
@@ -284,9 +316,12 @@ def getLunch():
             lunchRiceMenu.append([i,calories,"2 servings"])
 
 
+
 #Dinner Recommendation 
 def getDinner():
-
+  global dinnerBreadMenu
+  global dinnerDishMenu
+  global dinnerRiceMenu
   # prob_bread_curry = 0.5
   # prob_rice_dish = 0.5
 
@@ -322,7 +357,7 @@ def getDinner():
       
       #Using Correlation
       corr = getCorrelation(s)
-
+ 
       for i in corr.index:
         calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
         if(calories in range(int(round(DishCals))-50,int(round(DishCals))+50)):
@@ -357,7 +392,9 @@ Meal Recommendation Below
 
 getReqCalories()
 
-#Dividing calories using method 2
+print("Req Cal",requiredCalories)
+
+#Dividing calories using method 1
 Method2()
 
 #get Breakfast Recommendation
@@ -368,6 +405,12 @@ getLunch()
 
 #getDinnerRecommendation
 getDinner()
+
+# print(breakfastmenu)
+# print(lunchBreadMenu)
+# print(lunchDishMenu)
+# print(dinnerBreadMenu)
+# print(dinnerDishMenu)
 
 #Breakfast
 total = [0,0,0,0]
@@ -448,4 +491,4 @@ print("Total : ")
 print("Calories = ",total[0],)
 print("Carbohydrates = ",total[1]," (",round((total[1]*4.1/total[0])*100),"%)")
 print("Fats = ",total[2]," (",round((total[2]*8.8/total[0])*100),"%)")
-print("Protein = ",total[3]," (",round((total[2]*8.8/total[0])*100),"%)")
+print("Protein = ",total[3]," (",round((total[3]*4.1/total[0])*100),"%)")
