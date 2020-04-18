@@ -85,23 +85,23 @@ mongoClient.connect(url, (err,db)=>{
 
                 }
                 
-                for(i=0;i<breakfastMeals.length;i++){
-                    eatenCalories+=breakfastMeals[i].caloriesCount
-                    eatenCarbs+=breakfastMeals[i].carbs
-                    eatenFats+=breakfastMeals[i].fats
-                    eatenProtein+=breakfastMeals[i].protein
+                for(i=0;i<data.breakfastMeals.length;i++){
+                    eatenCalories+=data.breakfastMeals[i].caloriesCount
+                    eatenCarbs+=data.breakfastMeals[i].carbs
+                    eatenFats+=data.breakfastMeals[i].fats
+                    eatenProtein+=data.breakfastMeals[i].protein
                 }
-                for(i=0;i<lunchMeals.length;i++){
-                    eatenCalories+=lunchMeals[i].caloriesCount
-                    eatenCarbs+=lunchMeals[i].carbs
-                    eatenFats+=lunchMeals[i].fats
-                    eatenProtein+=lunchMeals[i].protein
+                for(i=0;i<data.lunchMeals.length;i++){
+                    eatenCalories+=data.lunchMeals[i].caloriesCount
+                    eatenCarbs+=data.lunchMeals[i].carbs
+                    eatenFats+=data.lunchMeals[i].fats
+                    eatenProtein+=data.lunchMeals[i].protein
                 }
-                for(i=0;i<dinnerMeals.length;i++){
-                    eatenCalories+=dinnerMeals[i].caloriesCount
-                    eatenCarbs+=dinnerMeals[i].carbs
-                    eatenFats+=dinnerMeals[i].fats
-                    eatenProtein+=dinnerMeals[i].protein
+                for(i=0;i<data.dinnerMeals.length;i++){
+                    eatenCalories+=data.dinnerMeals[i].caloriesCount
+                    eatenCarbs+=data.dinnerMeals[i].carbs
+                    eatenFats+=data.dinnerMeals[i].fats
+                    eatenProtein+=data.dinnerMeals[i].protein
                 }
 
                 macros['eatenCalories'] = eatenCalories
