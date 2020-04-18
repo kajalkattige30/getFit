@@ -26,7 +26,11 @@ mongoClient.connect(url, (err,db)=>{
             var proteinsg = ""
             var fatsg = ""
             var macros = ""
-            myDB.collection('user').find(query, {projection: {_id:0,current_weight:1 , goal_weight:1, calorieCount:1}}).toArray(function(err,result){
+            var eatenCalories = 0
+            var eatenCarbs = 0
+            var eatenFats = 0
+            var eatenProtein = 0
+            myDB.collection('user').find(query, {projection: {_id:0,current_weight:1 , goal_weight:1, calorieCount:1,breakfastMeals : 1, lunchMeals : 1, dinnerMeals : 1}}).toArray(function(err,result){
                 //if(err) throw err;
                 
                 data = Object.assign({},result[0])
@@ -78,9 +82,34 @@ mongoClient.connect(url, (err,db)=>{
                         f : fatsg
                     }
                     console.log(macros)
-                    res.status(200).send(JSON.stringify(macros))
 
                 }
+                
+                for(i=0;i<breakfastMeals.length;i++){
+                    eatenCalories+=breakfastMeals[i].caloriesCount
+                    eatenCarbs+=breakfastMeals[i].carbs
+                    eatenFats+=breakfastMeals[i].fats
+                    eatenProtein+=breakfastMeals[i].protein
+                }
+                for(i=0;i<lunchMeals.length;i++){
+                    eatenCalories+=lunchMeals[i].caloriesCount
+                    eatenCarbs+=lunchMeals[i].carbs
+                    eatenFats+=lunchMeals[i].fats
+                    eatenProtein+=lunchMeals[i].protein
+                }
+                for(i=0;i<dinnerMeals.length;i++){
+                    eatenCalories+=dinnerMeals[i].caloriesCount
+                    eatenCarbs+=dinnerMeals[i].carbs
+                    eatenFats+=dinnerMeals[i].fats
+                    eatenProtein+=dinnerMeals[i].protein
+                }
+
+                macros['eatenCalories'] = eatenCalories
+                macros['eatenCarbs'] = eatenCarbs
+                macros['eatenFats'] = eatenFats
+                macros['eatenProtein'] = eatenProtein
+                res.status(200).send(JSON.stringify(macros))
+
             })
             console.log(macros)
 

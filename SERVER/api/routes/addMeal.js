@@ -25,15 +25,15 @@ mongoClient.connect(url, (err,db)=>{
                 console.log(result[0])
                 let newvalues = ""
                 if(mealType == 'Breakfast'){
-                    result[0].breakfastMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount})
+                    result[0].breakfastMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount, carbs : data.carbs, fats : data.fats, protein : data.protein})
                     newvalues = { $set: {breakfastMeals: result[0].breakfastMeals } };
                 }
                 else if(mealType == 'Lunch'){
-                    result[0].lunchMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount})
+                    result[0].lunchMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount, carbs : data.carbs, fats : data.fats, protein : data.protein})
                     newvalues = { $set: {lunchMeals: result[0].lunchMeals } };
                 }
                 else{
-                    result[0].dinnerMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount})
+                    result[0].dinnerMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount, carbs : data.carbs, fats : data.fats, protein : data.protein})
                     newvalues = { $set: {dinnerMeals: result[0].dinnerMeals } };
                 }
 
