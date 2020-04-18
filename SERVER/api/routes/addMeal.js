@@ -42,7 +42,6 @@ mongoClient.connect(url, (err,db)=>{
                     if (err) throw err;
                     console.log("meal status updated");
                     res.status(200).send(JSON.stringify(data))
-                    db.close();
                 });
             })  
             

@@ -41,7 +41,6 @@ mongoClient.connect(url, (err,db)=>{
             collection.updateOne(query, updatedDetails, function(err,res){
                 if(err) throw err;
                 console.log("Details updated!")
-                db.close();
             });
             
             res.status(200).send(JSON.stringify(existingUser))

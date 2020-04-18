@@ -81,7 +81,6 @@ mongoClient.connect(url, (err,db)=>{
                     res.status(200).send(JSON.stringify(macros))
 
                 }
-                db.close();
             })
             console.log(macros)
 
