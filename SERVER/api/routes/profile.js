@@ -43,34 +43,48 @@ mongoClient.connect(url, (err,db)=>{
                 console.log("Details updated!")
                 db.close();
             });
-            router.get('/:email',(req,res) =>{
-                    // res.status(200).json({
-                    //     email : existingUser.email,
-                    //     name : existingUser.name,
-                    //     height :  existingUser.height,
-                    //     current_weight : existingUser.current_weight,
-                    //     activity_level : existingUser.activity_level,
-                    //     gender : existingUser.gender,
-                    //     age : existingUser.age,
-                    //     goal_weight : existingUser.goal_weight,
-                    //     bmi : existingUser.bmi,
-                    //     bmr : existingUser.bmr,
-                    //     calorieCount : existingUser.calorieCount
-
-                    // });
-
-            const q = {email : req.params.email}
-            collection.find(q,function(err, ans) {
-                if(err) throw err;
-                console.log(ans)
-                db.close();
-            })
-                    
-                
-            });
+            
             res.status(200).send(JSON.stringify(existingUser))
 
         })
+        router.get('/:email',(req,res) =>{
+            // const myDB = db.db('ProjectDB')
+            // const collection = myDB.collection('user')
+                // res.status(200).json({
+                //     email : existingUser.email,
+                //     name : existingUser.name,
+                //     height :  existingUser.height,
+                //     current_weight : existingUser.current_weight,
+                //     activity_level : existingUser.activity_level,
+                //     gender : existingUser.gender,
+                //     age : existingUser.age,
+                //     goal_weight : existingUser.goal_weight,
+                //     bmi : existingUser.bmi,
+                //     bmr : existingUser.bmr,
+                //     calorieCount : existingUser.calorieCount
+
+                // });
+
+        const q = {email : req.params.email}
+        collection.find(q, ).toArray(function(err, ans) {
+            if(err) throw err;
+            console.log(ans[0])
+            const objToSend = {
+                current_weight : ans[0].current_weight,
+                height : ans[0].height,
+                name : ans[0].name,
+                age : ans[0].age,
+                goal_weight : ans[0].goal_weight,
+                activity_level : ans[0].activity_level
+            }
+            console.log(objToSend)
+            res.status(200).send(JSON.stringify(objToSend))
+            db.close();
+        })
+        
+                
+            
+        });
     }
 })
 module.exports = router;
