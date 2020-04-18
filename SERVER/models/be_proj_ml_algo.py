@@ -418,7 +418,14 @@ breakfastDetails = []
 dinnerDetails = []
 dinnerDetails = []
 print("Meal Type\tRecommended Meal\t\t\tServings\tCalories\tCarbs\tFats\tProtein")
+
+meal = dict()
+meal['Breakfast'] = []
+meal['Lunch'] = []
+meal['Dinner'] = []
+
 for item in breakfastmenu:
+  itemDict = dict()
   temp = item[2].split()
   servings = int(temp[0])
   carbs = (dataset.loc[dataset['recipe_name'] == item[0]]['carbohydrates']).iloc[0]
@@ -428,10 +435,22 @@ for item in breakfastmenu:
   total[1]+=carbs*servings
   total[2]+=fats*servings
   total[3]+=protein*servings
+
+  itemDict['recipe_name'] = item[0]
+  itemDict['servings'] = servings
+  itemDict['calories'] = item[1]*servings
+  itemDict['carbs'] = carbs*servings
+  itemDict['fats'] = fats*servings
+  itemDict['protein'] = protein*servings
+  meal['Breakfast'].append(itemDict)
+
   print("Breakfast\t"+item[0]+"\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
   break
 
+
 for item in lunchBreadMenu:
+  itemDict = dict()
+
   if("chapati" in item[0].lower() or "roti" in item[0].lower() or "naan" in item[0].lower()):
     temp = item[2].split()
     servings = int(temp[0])
@@ -442,10 +461,21 @@ for item in lunchBreadMenu:
     total[1]+=carbs*servings
     total[2]+=fats*servings
     total[3]+=protein*servings
+
+    itemDict['recipe_name'] = item[0]
+    itemDict['servings'] = servings
+    itemDict['calories'] = item[1]*servings
+    itemDict['carbs'] = carbs*servings
+    itemDict['fats'] = fats*servings
+    itemDict['protein'] = protein*servings
+    meal['Lunch'].append(itemDict)
+
     print("Lunch\t\t"+item[0]+"\t\t\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
     break
 
 for item in lunchDishMenu:
+    
+
   temp = item[2].split()
   servings = int(temp[0])
   if(servings == 1):
@@ -456,6 +486,16 @@ for item in lunchDishMenu:
     total[1]+=carbs*servings
     total[2]+=fats*servings
     total[3]+=protein*servings
+
+    itemDict = dict()
+    itemDict['recipe_name'] = item[0]
+    itemDict['servings'] = servings
+    itemDict['calories'] = item[1]*servings
+    itemDict['carbs'] = carbs*servings
+    itemDict['fats'] = fats*servings
+    itemDict['protein'] = protein*servings
+    meal['Lunch'].append(itemDict)
+
     print("\t\t"+item[0]+"\t\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
     break
 
@@ -470,6 +510,16 @@ for item in dinnerBreadMenu:
     total[1]+=carbs*servings
     total[2]+=fats*servings
     total[3]+=protein*servings
+
+    itemDict = dict()
+    itemDict['recipe_name'] = item[0]
+    itemDict['servings'] = servings
+    itemDict['calories'] = item[1]*servings
+    itemDict['carbs'] = carbs*servings
+    itemDict['fats'] = fats*servings
+    itemDict['protein'] = protein*servings
+    meal['Dinner'].append(itemDict)
+
     print("Dinner\t\t"+item[0]+"\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
     break
 
@@ -484,6 +534,17 @@ for item in dinnerDishMenu:
     total[1]+=carbs*servings
     total[2]+=fats*servings
     total[3]+=protein*servings
+
+
+    itemDict = dict()
+    itemDict['recipe_name'] = item[0]
+    itemDict['servings'] = servings
+    itemDict['calories'] = item[1]*servings
+    itemDict['carbs'] = carbs*servings
+    itemDict['fats'] = fats*servings
+    itemDict['protein'] = protein*servings
+    meal['Dinner'].append(itemDict)
+
     print("\t\t"+item[0]+"\t\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
     break
 
@@ -492,3 +553,5 @@ print("Calories = ",total[0],)
 print("Carbohydrates = ",total[1]," (",round((total[1]*4.1/total[0])*100),"%)")
 print("Fats = ",total[2]," (",round((total[2]*8.8/total[0])*100),"%)")
 print("Protein = ",total[3]," (",round((total[3]*4.1/total[0])*100),"%)")
+
+print(meal)
