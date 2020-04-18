@@ -36,7 +36,6 @@ mongoClient.connect(url, (err,db)=>{
                 }
                 
                 res.status(200).send(JSON.stringify(dataToSend))
-                db.close();
 
             })  
             
