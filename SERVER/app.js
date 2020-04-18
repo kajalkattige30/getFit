@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const request = require('request-promise');
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -12,7 +13,8 @@ const userDetailRoutes = require('./api/routes/questionnaire');
 const homeFragmentRoutes = require('./api/routes/getInfo');
 const searchRoutes = require('./api/routes/search');
 const addMealRoutes = require('./api/routes/addMeal');
-const getMealRoutes = require('./api/routes/getMeal')
+const getMealRoutes = require('./api/routes/getMeal');
+const nodeFlaskRoutes = require('./api/routes/nodeFlask');
 
 app.use(express.json())
 
@@ -29,6 +31,7 @@ app.use('/getInfo',homeFragmentRoutes);
 app.use('/search',searchRoutes);
 app.use('/addMeal',addMealRoutes);
 app.use('/getMeal',getMealRoutes);
+app.use('/nodeFlask',nodeFlaskRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');
