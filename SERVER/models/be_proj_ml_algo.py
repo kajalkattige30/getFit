@@ -9,23 +9,22 @@ Original file is located at
 
 # Karl Pearson's Correlation 
 
+#Importing all required libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-#from google.colab import drive
-# drive.mount('/content/drive')
+import csv
+from sklearn.neighbors import NearestNeighbors
+from scipy.sparse import csr_matrix
+import random
+from numpy.random import choice
+
+
+#Importing dataset
 dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
 
-# df.loc[df['column_name'] == some_value]
 
-# print(dataset.head())
-# print(dataset.columns)
-#print(dataset.shape)
-#print(list(dataset.columns))
-
-
-import csv
-
+#Creating PivotDatabase
 def createPivotDatabase(categories):
   with open("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv",'r') as csv_file:
       csv_reader = csv.reader(csv_file)
@@ -49,40 +48,24 @@ def createPivotDatabase(categories):
 
 def getCorrelation(sample_fooditem):
   pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
-#   print(pivotdataset.shape)
-#   print(list(pivotdataset.columns))
   pivotdataset.drop_duplicates(keep = 'first', inplace = True)
-  # print(pivotdataset.shape)
-  # print(pivotdataset.head())
   db_pivot = pivotdataset.pivot(index='macronutrient',columns='recipe_name').value
   macronutrient = db_pivot.index
   recipe_name = db_pivot.columns
-#   print(db_pivot.shape)
-#   print(db_pivot.head())
   db_pivot.to_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/pivot_table.csv")
 
   similar_fooditem = db_pivot.corrwith(sample_fooditem)
   corr_fooditem = pd.DataFrame(similar_fooditem,columns=['pearsonR']).sort_values('pearsonR',ascending=False).head(10)
   return corr_fooditem
 
-from sklearn.neighbors import NearestNeighbors
-from scipy.sparse import csr_matrix
-
+# K-nearest Neighbors 
 def getKnn():
   pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
   pivotdataset.drop_duplicates(keep = 'first', inplace = True)
   db_pivot = pivotdataset.pivot(index='recipe_name',columns='macronutrient', values = 'value')
-#   print(pivotdataset.shape)
-#   print(db_pivot.head())
   db_features_matrix = csr_matrix(db_pivot.values)
-  # print(db_features_matrix)
   model_knn = NearestNeighbors(metric = 'cosine', algorithm = 'brute')
-#   print(model_knn.fit(db_features_matrix))
   query_index = np.random.choice(db_pivot.shape[0])
-#   print(query_index)
-  # query_index = 20
-#   print(db_pivot.iloc[query_index,:].values)
-  # print(db_pivot.iloc[query_index,:]).values)
   distance, indices = model_knn.kneighbors(db_pivot.iloc[query_index,:].values.reshape(1,-1), n_neighbors = 6)
 
 #   for i in range(0, len(distance.flatten())):
@@ -90,361 +73,301 @@ def getKnn():
 #       print('Recommendation for ',db_pivot.index[query_index])
 #     else:
 #       print(db_pivot.index[indices.flatten()[i]],distance.flatten()[i])
+
 # getKnn()
 
-# sample_fooditem = db_pivot['Aloo Matar']
-# print(sample_fooditem)
-# similar_fooditem = db_pivot.corrwith(sample_fooditem)
-# corr_fooditem = pd.DataFrame(similar_fooditem,columns=['pearsonR']).sort_values('pearsonR',ascending=False).head(10)
-# print(corr_fooditem)
 
-import random
-#Sample User
-
-gender = 'female'
-age = 21
-height = 160
-weight = 50
-goal = 'gain-weight'
-pace = 'slow'
+#All required Variables
 requiredCalories = 0
-if(gender == 'female'):
-  requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) - 161
-else:
-  requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) + 5
 
-# print(requiredCalories)
-rate = 0
-if(pace == 'slow'): 
-  rate = 0.05
+breakfastCals = 0
+lunchCals = 0
+dinnerCals = 0
+bcarbs = 0
+bfats = 0
+bprotein = 0
+lcarbs = 0
+lfats = 0
+lprotein = 0
+dcarbs = 0
+dfats = 0
+dprotein = 0
 
-if(goal == 'gain-weight'):
-  pass
-
-# requiredCalories = requiredCalories + rate*requiredCalories
-print(requiredCalories)
-
-#Method 2
-
-import random
-
-#Randomly dividing total Calories into Breakfast, Lunch and Dinner Cals 
-#Giving more weightage to Lunch and Dinner
-requiredCalories = 1300
-r1 = random.randint(20,40)
-r2 = random.randint(20,40)
-r3 = random.randint(20,40)
-r4 = random.randint(20,40)
-r5 = random.randint(20,40)
-sum = r1+r2+r3+r4+r5
-breakfastCals = (r1/sum)*requiredCalories
-lunchCals = ((r2+r3)/sum)*requiredCalories
-dinnerCals = ((r4+r5)/sum)*requiredCalories
-# print(breakfastCals)
-# print(lunchCals)
-# print(dinnerCals)
-
-#Breakfast MacroNutrients -> Dividing Breakfast Cals into 45-60% carbs, 20-35% fats, remaining proteins 
-r1 = random.randint(450,600)/10
-r2 = random.randint(200,350)/10
-r3 = random.randint(100,350)/10
-sum = r1+r2+r3
-bcarbs = (r1/sum)*breakfastCals
-bfats = (r2/sum)*breakfastCals
-bprotein = (r3/sum)*breakfastCals
-# print(bcarbs)
-# print(bfats)
-# print(bprotein)
-
-#Lunch MacroNutrients -> Dividing Breakfast Cals into 45-60% carbs, 20-35% fats, remaining proteins 
-r1 = random.randint(450,600)/10
-r2 = random.randint(200,350)/10
-r3 = random.randint(100,350)/10
-sum = r1+r2+r3
-lcarbs = (r1/sum)*lunchCals
-lfats = (r2/sum)*lunchCals
-lprotein = (r3/sum)*lunchCals
-# print(lcarbs)
-# print(lfats)
-# print(lprotein)
-
-#Dinner MacroNutrients -> Dividing Breakfast Cals into 45-60% carbs, 20-35% fats, remaining proteins 
-r1 = random.randint(450,600)/10
-r2 = random.randint(200,350)/10
-r3 = random.randint(100,350)/10
-sum = r1+r2+r3
-dcarbs = (r1/sum)*dinnerCals
-dfats = (r2/sum)*dinnerCals
-dprotein = (r3/sum)*dinnerCals
-# print(dcarbs)
-# print(dfats)
-# print(dprotein)
-
-#Method 1 - keeping calorie divide by 3 and random in nutrients ratio
-#Considering nutrient ratio - 50%carbs, 30%fats and 20%protein
-
-
-#Sample 
-requiredCalories = 1500
-
-#Equally dividing calories for the three meals
-breakfastCals = (1/5)*requiredCalories;
-lunchCals = (2/5)*requiredCalories;
-dinnerCals = (2/5)*requiredCalories;
-# print(requiredCalories/3)
-
-#Randomly dividing macronutrients ratio
-r1 = random.randint(1,100)
-r2 = random.randint(1,100)
-r3 = random.randint(1,100)
-sum = r1+r2+r3
-bcarbs = (r1/sum)*0.5*requiredCalories
-lcarbs = (r2/sum)*0.5*requiredCalories
-dcarbs = (r3/sum)*0.5*requiredCalories
-
-r1 = random.randint(1,100)
-r2 = random.randint(1,100)
-r3 = random.randint(1,100)
-sum = r1+r2+r3
-bfats = (r1/sum)*0.3*requiredCalories
-lfats = (r2/sum)*0.3*requiredCalories
-dfats = (r3/sum)*0.3*requiredCalories
-
-r1 = random.randint(1,100)
-r2 = random.randint(1,100)
-r3 = random.randint(1,100)
-sum = r1+r2+r3
-bprotein = (r1/sum)*0.2*requiredCalories
-lprotein = (r2/sum)*0.2*requiredCalories
-dprotein = (r3/sum)*0.2*requiredCalories
-
-# print(bprotein)
-# print(lprotein)
-# print(dprotein)
-
-#Breakfast Recommendation - method 1 
 breakfastmenu = []
-
-bcarbs_g = bcarbs/4.1
-bfats_g = bfats/8.8
-bprotein_g = bprotein/4.1
-
-sample = np.array([breakfastCals,bcarbs_g,bfats_g,bprotein_g])
-# sample = np.array([205,30,8,5])
-s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-# print(s)
-
-# df.loc[df['column_name'] == some_value]
-
-createPivotDatabase(['Appetizers'])
-
-#Using Correlation
-corr = getCorrelation(s)
-# print(corr)
-# # print(corr['recipe_name'].tolist())
-for i in corr.index:
-  if('chutney' not in i.lower() and 'dip' not in i.lower()):
-    # print(i)
-    calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-    # if(calories < breakfastCals+100 and calories > breakfastCals-100):
-    #   breakfastmenu.append([i,calories])
-    #   print(calories)
-    #   print(i)
-    # print(int(round(5.5)))
-    if(calories in range(int(round(breakfastCals))-50,int(round(breakfastCals))+50)):
-      # print(int(round(breakfastCals)))
-      breakfastmenu.append([i,calories,"1 serving"])
-    elif(calories in range(int(round(breakfastCals/2))-25,int(round(breakfastCals/2))+25)):
-      # print(int(round(breakfastCals/2)))
-      breakfastmenu.append([i,calories,"2 servings"])
-
-# print(breakfastmenu)
-
-#Lunch Recommendation 
 lunchBreadMenu = []
 lunchDishMenu = []
-lunchRiceMenu = []
-
-from numpy.random import choice
-prob_bread_curry = 0.5
-prob_rice_dish = 0.5
-
-lunch_meal_type = choice(['bread curry','rice dish'],p=[prob_bread_curry,prob_rice_dish])
-lunch_meal_type = 'bread curry'
-# print("Meal Type ",lunch_meal_type)
-
-lcarbs_g = lcarbs/4.1
-lfats_g = lfats/8.8
-lprotein_g = lprotein/4.1
-
-# df.loc[df['column_name'] == some_value]
-
-if(lunch_meal_type == "bread curry"):
-
-    #Get Bread
-    breadCals = (1/3)*lunchCals
-    createPivotDatabase(['IndianBreads'])
-    sample = np.array([breadCals,lcarbs_g,lfats_g,lprotein_g])
-    # sample = np.array([205,30,8,5])
-    s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-    # print(s)
-    #Using Correlation
-    corr = getCorrelation(s)
-    # print(corr)
-    # # print(corr['recipe_name'].tolist())
-    for i in corr.index:
-      calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-      if(calories in range(int(round(breadCals))-50,int(round(breadCals))+50)):
-        # print(int(round(breadCals)))
-        lunchBreadMenu.append([i,calories,"1 serving"])
-      elif(calories in range(int(round(breadCals/2))-25,int(round(breadCals/2))+25)):
-        # print(int(round(breadCals/2)))
-        lunchBreadMenu.append([i,calories,"2 servings"])
-
-    #Get Dish
-    DishCals = (2/3)*lunchCals
-    createPivotDatabase(['IndianMainDishes'])
-    sample = np.array([DishCals,lcarbs_g,lfats_g,lprotein_g])
-    # sample = np.array([205,30,8,5])
-    s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-    # print(s)
-    #Using Correlation
-    corr = getCorrelation(s)
-    # print(corr)
-    # # print(corr['recipe_name'].tolist())
-    for i in corr.index:
-      calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-      if(calories in range(int(round(DishCals))-50,int(round(DishCals))+50)):
-        # print(int(round(DishCals)))
-        lunchDishMenu.append([i,calories,"1 serving"])
-      elif(calories in range(int(round(DishCals/2))-25,int(round(DishCals/2))+25)):
-        # print(int(round(DishCals/2)))
-        lunchDishMenu.append([i,calories,"2 servings"])
-
-elif(lunch_meal_type == "rice dish"):
-
-    RiceCals = lunchCals
-    createPivotDatabase(['IndianMainDishes'])
-    sample = np.array([RiceCals,lcarbs_g,lfats_g,lprotein_g])
-    # sample = np.array([205,30,8,5])
-    s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-    # print(s)
-    #Using Correlation
-    corr = getCorrelation(s)
-    # print(corr)
-    # # print(corr['recipe_name'].tolist())
-    for i in corr.index:
-      if('rice' in i.lower()):
-        calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-        if(calories in range(int(round(RiceCals))-50,int(round(RiceCals))+50)):
-        #   print(int(round(RiceCals)))
-          lunchDishMenu.append([i,calories,"1 serving"])
-        elif(calories in range(int(round(RiceCals/2))-25,int(round(RiceCals/2))+25)):
-        #   print(int(round(RiceCals/2)))
-          lunchRiceMenu.append([i,calories,"2 servings"])
-
-# print(lunchBreadMenu)
-# print(lunchDishMenu)
-# print(lunchRiceMenu)
-
-#Dinner Recommendation 
 dinnerBreadMenu = []
 dinnerDishMenu = []
 dinnerRiceMenu = []
 
-from numpy.random import choice
-prob_bread_curry = 0.5
-prob_rice_dish = 0.5
+#Sample User - this user data to be fetched from nodejs Server - only required Calories and plan type.
 
-dinner_meal_type = choice(['bread curry','rice dish'],p=[prob_bread_curry,prob_rice_dish])
-dinner_meal_type = 'bread curry'
-# print("Meal Type ",dinner_meal_type)
+def getReqCalories():
+  gender = 'female'
+  age = 21
+  height = 160
+  weight = 50
+  goal = 'gain-weight'
+  pace = 'slow'
+  requiredCalories = 0
+  if(gender == 'female'):
+    requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) - 161
+  else:
+    requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) + 5
 
-dcarbs_g = dcarbs/4.1
-dfats_g = dfats/8.8
-dprotein_g = dprotein/4.1
+  # print(requiredCalories)
 
-# df.loc[df['column_name'] == some_value]
+#Method 2
+#Randomly dividing total Calories into Breakfast, Lunch and Dinner Cals 
+#Giving more weightage to Lunch and Dinner
+def Method2():
+  
+  r1 = random.randint(20,40)
+  r2 = random.randint(20,40)
+  r3 = random.randint(20,40)
+  r4 = random.randint(20,40)
+  r5 = random.randint(20,40)
+  sum = r1+r2+r3+r4+r5
+  breakfastCals = (r1/sum)*requiredCalories
+  lunchCals = ((r2+r3)/sum)*requiredCalories
+  dinnerCals = ((r4+r5)/sum)*requiredCalories
 
-if(dinner_meal_type == "bread curry"):
+  #Breakfast MacroNutrients -> Dividing Breakfast Cals into 45-60% carbs, 20-35% fats, remaining proteins 
+  r1 = random.randint(450,600)/10
+  r2 = random.randint(200,350)/10
+  r3 = random.randint(100,350)/10
+  sum = r1+r2+r3
+  bcarbs = (r1/sum)*breakfastCals
+  bfats = (r2/sum)*breakfastCals
+  bprotein = (r3/sum)*breakfastCals
 
-    #Get Bread
-    breadCals = (1/3)*dinnerCals
-    createPivotDatabase(['IndianBreads'])
-    sample = np.array([breadCals,dcarbs_g,dfats_g,dprotein_g])
-    # sample = np.array([205,30,8,5])
-    s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-    # print(s)
-    #Using Correlation
-    corr = getCorrelation(s)
-    # print(corr)
-    # # print(corr['recipe_name'].tolist())
-    for i in corr.index:
+  #Lunch MacroNutrients -> Dividing Breakfast Cals into 45-60% carbs, 20-35% fats, remaining proteins 
+  r1 = random.randint(450,600)/10
+  r2 = random.randint(200,350)/10
+  r3 = random.randint(100,350)/10
+  sum = r1+r2+r3
+  lcarbs = (r1/sum)*lunchCals
+  lfats = (r2/sum)*lunchCals
+  lprotein = (r3/sum)*lunchCals
+
+  #Dinner MacroNutrients -> Dividing Breakfast Cals into 45-60% carbs, 20-35% fats, remaining proteins 
+  r1 = random.randint(450,600)/10
+  r2 = random.randint(200,350)/10
+  r3 = random.randint(100,350)/10
+  sum = r1+r2+r3
+  dcarbs = (r1/sum)*dinnerCals
+  dfats = (r2/sum)*dinnerCals
+  dprotein = (r3/sum)*dinnerCals
+
+#Method 1 - keeping calorie divide by 3 and random in nutrients ratio
+#Considering nutrient ratio - 50%carbs, 30%fats and 20%protein
+def Method1():
+
+  #Equally dividing calories for the three meals
+  breakfastCals = (1/5)*requiredCalories;
+  lunchCals = (2/5)*requiredCalories;
+  dinnerCals = (2/5)*requiredCalories;
+  # print(requiredCalories/3)
+
+  #Randomly dividing macronutrients ratio
+  r1 = random.randint(1,100)
+  r2 = random.randint(1,100)
+  r3 = random.randint(1,100)
+  sum = r1+r2+r3
+  bcarbs = (r1/sum)*0.5*requiredCalories
+  lcarbs = (r2/sum)*0.5*requiredCalories
+  dcarbs = (r3/sum)*0.5*requiredCalories
+
+  r1 = random.randint(1,100)
+  r2 = random.randint(1,100)
+  r3 = random.randint(1,100)
+  sum = r1+r2+r3
+  bfats = (r1/sum)*0.3*requiredCalories
+  lfats = (r2/sum)*0.3*requiredCalories
+  dfats = (r3/sum)*0.3*requiredCalories
+
+  r1 = random.randint(1,100)
+  r2 = random.randint(1,100)
+  r3 = random.randint(1,100)
+  sum = r1+r2+r3
+  bprotein = (r1/sum)*0.2*requiredCalories
+  lprotein = (r2/sum)*0.2*requiredCalories
+  dprotein = (r3/sum)*0.2*requiredCalories
+
+  # print(bprotein)
+  # print(lprotein)
+  # print(dprotein)
+
+#Breakfast Recommendation
+def getBreakfast():
+
+  bcarbs_g = bcarbs/4.1
+  bfats_g = bfats/8.8
+  bprotein_g = bprotein/4.1
+
+  sample = np.array([breakfastCals,bcarbs_g,bfats_g,bprotein_g])
+  s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
+  # df.loc[df['column_name'] == some_value]
+  createPivotDatabase(['Appetizers'])
+  #Using Correlation
+  corr = getCorrelation(s)
+
+  for i in corr.index:
+    if('chutney' not in i.lower() and 'dip' not in i.lower()):
       calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-      if(calories in range(int(round(breadCals))-50,int(round(breadCals))+50)):
-        # print(int(round(breadCals)))
-        dinnerBreadMenu.append([i,calories,"1 serving"])
-      elif(calories in range(int(round(breadCals/2))-25,int(round(breadCals/2))+25)):
-        # print(int(round(breadCals/2)))
-        dinnerBreadMenu.append([i,calories,"2 servings"])
+      if(calories in range(int(round(breakfastCals))-50,int(round(breakfastCals))+50)):
+        breakfastmenu.append([i,calories,"1 serving"])
+      elif(calories in range(int(round(breakfastCals/2))-25,int(round(breakfastCals/2))+25)):
+        breakfastmenu.append([i,calories,"2 servings"])
 
-    #Get Dish
-    DishCals = (2/3)*dinnerCals
-    createPivotDatabase(['IndianMainDishes'])
-    sample = np.array([DishCals,dcarbs_g,dfats_g,dprotein_g])
-    # sample = np.array([205,30,8,5])
-    s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-    # print(s)
-    #Using Correlation
-    corr = getCorrelation(s)
-    # print(corr)
-    # # print(corr['recipe_name'].tolist())
-    for i in corr.index:
-      calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-      if(calories in range(int(round(DishCals))-50,int(round(DishCals))+50)):
-        # print(int(round(DishCals)))
-        dinnerDishMenu.append([i,calories,"1 serving"])
-      elif(calories in range(int(round(DishCals/2))-25,int(round(DishCals/2))+25)):
-        # print(int(round(DishCals/2)))
-        dinnerDishMenu.append([i,calories,"2 servings"])
+#Lunch Recommendation 
+def getLunch():
+  
+  # lunchRiceMenu = []
+  # prob_bread_curry = 0.5
+  # prob_rice_dish = 0.5
+  # lunch_meal_type = choice(['bread curry','rice dish'],p=[prob_bread_curry,prob_rice_dish])
+  lunch_meal_type = 'bread curry'
 
-elif(dinner_meal_type == "rice dish"):
+  lcarbs_g = lcarbs/4.1
+  lfats_g = lfats/8.8
+  lprotein_g = lprotein/4.1
 
-    RiceCals = dinnerCals
-    createPivotDatabase(['IndianMainDishes'])
-    sample = np.array([RiceCals,dcarbs_g,dfats_g,dprotein_g])
-    # sample = np.array([205,30,8,5])
-    s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
-    # print(s)
-    #Using Correlation
-    corr = getCorrelation(s)
-    # print(corr)
-    # # print(corr['recipe_name'].tolist())
-    for i in corr.index:
-      if('rice' in i.lower()):
+  if(lunch_meal_type == "bread curry"):
+
+      #Get Bread
+      breadCals = (1/3)*lunchCals
+      createPivotDatabase(['IndianBreads'])
+      sample = np.array([breadCals,lcarbs_g,lfats_g,lprotein_g])
+      s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
+
+      #Using Correlation
+      corr = getCorrelation(s)
+      for i in corr.index:
         calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
-        if(calories in range(int(round(RiceCals))-50,int(round(RiceCals))+50)):
-          # print(int(round(RiceCals)))
+        if(calories in range(int(round(breadCals))-50,int(round(breadCals))+50)):
+          lunchBreadMenu.append([i,calories,"1 serving"])
+        elif(calories in range(int(round(breadCals/2))-25,int(round(breadCals/2))+25)):
+          lunchBreadMenu.append([i,calories,"2 servings"])
+
+      #Get Dish
+      DishCals = (2/3)*lunchCals
+      createPivotDatabase(['IndianMainDishes'])
+      sample = np.array([DishCals,lcarbs_g,lfats_g,lprotein_g])
+      s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
+
+      #Using Correlation
+      corr = getCorrelation(s)
+      for i in corr.index:
+        calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
+        if(calories in range(int(round(DishCals))-50,int(round(DishCals))+50)):
+          lunchDishMenu.append([i,calories,"1 serving"])
+        elif(calories in range(int(round(DishCals/2))-25,int(round(DishCals/2))+25)):
+          lunchDishMenu.append([i,calories,"2 servings"])
+
+  elif(lunch_meal_type == "rice dish"):
+
+      RiceCals = lunchCals
+      createPivotDatabase(['IndianMainDishes'])
+      sample = np.array([RiceCals,lcarbs_g,lfats_g,lprotein_g])
+      s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
+      
+      #Using Correlation
+      corr = getCorrelation(s)
+
+      for i in corr.index:
+        if('rice' in i.lower()):
+          calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
+          if(calories in range(int(round(RiceCals))-50,int(round(RiceCals))+50)):
+            lunchDishMenu.append([i,calories,"1 serving"])
+          elif(calories in range(int(round(RiceCals/2))-25,int(round(RiceCals/2))+25)):
+            lunchRiceMenu.append([i,calories,"2 servings"])
+
+
+#Dinner Recommendation 
+def getDinner():
+
+  # prob_bread_curry = 0.5
+  # prob_rice_dish = 0.5
+
+  # dinner_meal_type = choice(['bread curry','rice dish'],p=[prob_bread_curry,prob_rice_dish])
+  dinner_meal_type = 'bread curry'
+
+  dcarbs_g = dcarbs/4.1
+  dfats_g = dfats/8.8
+  dprotein_g = dprotein/4.1
+
+  if(dinner_meal_type == "bread curry"):
+
+      #Get Bread
+      breadCals = (1/3)*dinnerCals
+      createPivotDatabase(['IndianBreads'])
+      sample = np.array([breadCals,dcarbs_g,dfats_g,dprotein_g])
+      s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
+      
+      #Using Correlation
+      corr = getCorrelation(s)
+      for i in corr.index:
+        calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
+        if(calories in range(int(round(breadCals))-50,int(round(breadCals))+50)):
+          dinnerBreadMenu.append([i,calories,"1 serving"])
+        elif(calories in range(int(round(breadCals/2))-25,int(round(breadCals/2))+25)):
+          dinnerBreadMenu.append([i,calories,"2 servings"])
+
+      #Get Dish
+      DishCals = (2/3)*dinnerCals
+      createPivotDatabase(['IndianMainDishes'])
+      sample = np.array([DishCals,dcarbs_g,dfats_g,dprotein_g])
+      s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
+      
+      #Using Correlation
+      corr = getCorrelation(s)
+
+      for i in corr.index:
+        calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
+        if(calories in range(int(round(DishCals))-50,int(round(DishCals))+50)):
           dinnerDishMenu.append([i,calories,"1 serving"])
-        elif(calories in range(int(round(RiceCals/2))-25,int(round(RiceCals/2))+25)):
-          # print(int(round(RiceCals/2)))
-          dinnerRiceMenu.append([i,calories,"2 servings"])
+        elif(calories in range(int(round(DishCals/2))-25,int(round(DishCals/2))+25)):
+          dinnerDishMenu.append([i,calories,"2 servings"])
 
-# print(dinnerBreadMenu)
-# print(dinnerDishMenu)
-# print(dinnerRiceMenu)
+  elif(dinner_meal_type == "rice dish"):
 
-# print(breakfastmenu)
+      RiceCals = dinnerCals
+      createPivotDatabase(['IndianMainDishes'])
+      sample = np.array([RiceCals,dcarbs_g,dfats_g,dprotein_g])
+      s = pd.Series(sample,index=['calories','carbohydrates','fat','protein'],dtype='float64')
 
-# print(lunchBreadMenu)
-# print(lunchDishMenu)
-# print(lunchRiceMenu)
+      #Using Correlation
+      corr = getCorrelation(s)
 
-# print(dinnerBreadMenu)
-# print(dinnerDishMenu)
-# print(dinnerRiceMenu)
+      for i in corr.index:
+        if('rice' in i.lower()):
+          calories = (dataset.loc[dataset['recipe_name'] == i]['calories']).iloc[0]
+          if(calories in range(int(round(RiceCals))-50,int(round(RiceCals))+50)):
+            dinnerDishMenu.append([i,calories,"1 serving"])
+          elif(calories in range(int(round(RiceCals/2))-25,int(round(RiceCals/2))+25)):
+            dinnerRiceMenu.append([i,calories,"2 servings"])
 
-# Recommended Meal
+
+'''
+
+Meal Recommendation Below
+
+'''
+
+getReqCalories()
+
+#Dividing calories using method 2
+Method2()
+
+#get Breakfast Recommendation
+getBreakfast()
+
+#get Lunch Recommendation
+getLunch()
+
+#getDinnerRecommendation
+getDinner()
 
 #Breakfast
 total = [0,0,0,0]
@@ -453,16 +376,11 @@ dinnerDetails = []
 dinnerDetails = []
 print("Meal Type\tRecommended Meal\t\t\tServings\tCalories\tCarbs\tFats\tProtein")
 for item in breakfastmenu:
-  # print(item[0])
-  # print(item[1])
   temp = item[2].split()
   servings = int(temp[0])
   carbs = (dataset.loc[dataset['recipe_name'] == item[0]]['carbohydrates']).iloc[0]
   fats = (dataset.loc[dataset['recipe_name'] == item[0]]['fat']).iloc[0]
   protein = (dataset.loc[dataset['recipe_name'] == item[0]]['protein']).iloc[0]
-  # print(carbs)
-  # print(fats)
-  # print(protein)
   total[0]+=item[1]*servings
   total[1]+=carbs*servings
   total[2]+=fats*servings
@@ -471,17 +389,12 @@ for item in breakfastmenu:
   break
 
 for item in lunchBreadMenu:
-  # print(item[0])
-  # print(item[1])
   if("chapati" in item[0].lower() or "roti" in item[0].lower() or "naan" in item[0].lower()):
     temp = item[2].split()
     servings = int(temp[0])
     carbs = (dataset.loc[dataset['recipe_name'] == item[0]]['carbohydrates']).iloc[0]
     fats = (dataset.loc[dataset['recipe_name'] == item[0]]['fat']).iloc[0]
     protein = (dataset.loc[dataset['recipe_name'] == item[0]]['protein']).iloc[0]
-    # print(carbs)
-    # print(fats)
-    # print(protein)
     total[0]+=item[1]*servings
     total[1]+=carbs*servings
     total[2]+=fats*servings
@@ -490,17 +403,12 @@ for item in lunchBreadMenu:
     break
 
 for item in lunchDishMenu:
-  # print(item[0])
-  # print(item[1])
   temp = item[2].split()
   servings = int(temp[0])
   if(servings == 1):
     carbs = (dataset.loc[dataset['recipe_name'] == item[0]]['carbohydrates']).iloc[0]
     fats = (dataset.loc[dataset['recipe_name'] == item[0]]['fat']).iloc[0]
     protein = (dataset.loc[dataset['recipe_name'] == item[0]]['protein']).iloc[0]
-    # print(carbs)
-    # print(fats)
-    # print(protein)
     total[0]+=item[1]*servings
     total[1]+=carbs*servings
     total[2]+=fats*servings
@@ -509,17 +417,12 @@ for item in lunchDishMenu:
     break
 
 for item in dinnerBreadMenu:
-  # print(item[0])
-  # print(item[1])
   if("chapati" in item[0].lower() or "roti" in item[0].lower() or "naan" in item[0].lower()):
     temp = item[2].split()
     servings = int(temp[0])
     carbs = (dataset.loc[dataset['recipe_name'] == item[0]]['carbohydrates']).iloc[0]
     fats = (dataset.loc[dataset['recipe_name'] == item[0]]['fat']).iloc[0]
     protein = (dataset.loc[dataset['recipe_name'] == item[0]]['protein']).iloc[0]
-    # print(carbs)
-    # print(fats)
-    # print(protein)
     total[0]+=item[1]*servings
     total[1]+=carbs*servings
     total[2]+=fats*servings
@@ -528,17 +431,12 @@ for item in dinnerBreadMenu:
     break
 
 for item in dinnerDishMenu:
-  # print(item[0])
-  # print(item[1])
   temp = item[2].split()
   servings = int(temp[0])
   if(servings == 1):
     carbs = (dataset.loc[dataset['recipe_name'] == item[0]]['carbohydrates']).iloc[0]
     fats = (dataset.loc[dataset['recipe_name'] == item[0]]['fat']).iloc[0]
     protein = (dataset.loc[dataset['recipe_name'] == item[0]]['protein']).iloc[0]
-    # print(carbs)
-    # print(fats)
-    # print(protein)
     total[0]+=item[1]*servings
     total[1]+=carbs*servings
     total[2]+=fats*servings
