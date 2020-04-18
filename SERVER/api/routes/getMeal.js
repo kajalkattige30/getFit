@@ -11,44 +11,39 @@ mongoClient.connect(url, (err,db)=>{
     else{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
-        
-        router.post('/:email/:mealType',(req,res) =>{
+
+        router.get('/:email/:mealType',(req,res) =>{
             const query = {email : req.params.email}
-            const data = {
-                recipeName : req.body.recipeName,
-                caloriesCount : req.body.caloriesCount
-            }
+            // const data = {
+            //     recipeName : req.body.recipeName,
+            //     caloriesCount : req.body.caloriesCount
+            // }
             const mealType = req.params.mealType
             console.log(query)
+            let dataToSend = ""
             collection.find(query,{projection: {_id:0,breakfastMeals:1 , lunchMeals:1, dinnerMeals:1}}).toArray((err,result)=>{
                 // data = result
                 console.log(result[0])
                 let newvalues = ""
                 if(mealType == 'Breakfast'){
-                    result[0].breakfastMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount, carbs : data.carbs, fats : data.fats, protein : data.protein})
-                    newvalues = { $set: {breakfastMeals: result[0].breakfastMeals } };
+
+                    dataToSend = result[0].breakfastMeals;
                 }
                 else if(mealType == 'Lunch'){
-                    result[0].lunchMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount, carbs : data.carbs, fats : data.fats, protein : data.protein})
-                    newvalues = { $set: {lunchMeals: result[0].lunchMeals } };
+                    dataToSend = result[0].lunchMeals;
                 }
                 else{
-                    result[0].dinnerMeals.push({recipeName : data.recipeName, caloriesCount : data.caloriesCount, carbs : data.carbs, fats : data.fats, protein : data.protein})
-                    newvalues = { $set: {dinnerMeals: result[0].dinnerMeals } };
+                    dataToSend = result[0].dinnerMeals;
                 }
 
-                
-                collection.updateOne(query, newvalues, function(err, resultUpdate) {
-                    if (err) throw err;
-                    console.log("meal status updated");
-                    res.status(200).send(JSON.stringify(data))
-                });
+                res.status(200).send(JSON.stringify(dataToSend))
+
             })  
-            
+
         })
 
     }
 })
 
 
-module.exports = router;
+module.exports = router; 

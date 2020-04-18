@@ -20,7 +20,6 @@ mongoClient.connect(url, (err,db)=>{
                     console.log('Error fetching Search data')
                 }
                 else{
-                    console.log(result)
                     res.status(200).send(result)
                 }
             })

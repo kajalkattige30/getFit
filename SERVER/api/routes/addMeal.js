@@ -16,7 +16,10 @@ mongoClient.connect(url, (err,db)=>{
             const query = {email : req.params.email}
             const data = {
                 recipeName : req.body.recipeName,
-                caloriesCount : req.body.caloriesCount
+                caloriesCount : req.body.caloriesCount,
+                carbs : req.body.carbs,
+                fats : req.body.fats,
+                protein : req.body.protein
             }
             const mealType = req.params.mealType
             console.log(query)
