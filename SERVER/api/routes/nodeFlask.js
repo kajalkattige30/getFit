@@ -10,14 +10,34 @@ mongoClient.connect(url, (err,db)=>{
     else{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
-        router.get('/:email',async function(req,res){
+        router.get('/:email', function(req,res){
             const query = {email : req.params.email}
             collection.find(query).toArray(function(err,result){
                 if(err) throw err;
                 const nodeToFlask = {
                     calorieCount : result[0].calorieCount
                 }
-                res.status(200).send(JSON.stringify(nodeToFlask))
+                console.log(nodeToFlask)
+
+                var options = {
+                    method: 'POST',
+                    uri: 'http://localhost:3000/nodeFlask/demo@gmail.com',
+                    body: nodeToFlask,
+                    json: true // Automatically stringifies the body to JSON
+                };
+
+                var returndata;
+                var sendrequest = request(options)
+                .then(function (parsedBody) {
+                    console.log(parsedBody); // parsedBody contains the data sent back from the Flask server
+                    returndata = parsedBody; // do something with this data, here I'm assigning it to a variable.
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+                
+                res.status(200).send(JSON.stringify(returndata))
+                
 
             })
           
@@ -25,3 +45,4 @@ mongoClient.connect(url, (err,db)=>{
 
     }
 })
+module.exports = router;

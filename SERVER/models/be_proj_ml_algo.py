@@ -18,21 +18,21 @@ import csv
 # from scipy.sparse import csr_matrix
 import random
 from numpy.random import choice
-
+import pickle
 
 #Importing dataset
 # dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
-dataset = pd.read_csv("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
+dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
 
 #Creating PivotDatabase
 def createPivotDatabase(categories):
   #C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv
-  with open("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/dataset.csv",'r') as csv_file:
+  with open("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv",'r') as csv_file:
       csv_reader = csv.reader(csv_file)
 
       next(csv_reader)
       #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv
-      with open("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/PivotDataset.csv",'w', newline = '', encoding='utf-8') as new_file:
+      with open("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/PivotDataset.csv",'w', newline = '', encoding='utf-8') as new_file:
         fieldnames = ['macronutrient','recipe_name','value']
         csv_writer = csv.DictWriter(new_file,fieldnames=fieldnames)
         csv_writer.writeheader()
@@ -50,13 +50,13 @@ def createPivotDatabase(categories):
 
 def getCorrelation(sample_fooditem):
   #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv
-  pivotdataset = pd.read_csv("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
+  pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
   pivotdataset.drop_duplicates(keep = 'first', inplace = True)
   db_pivot = pivotdataset.pivot(index='macronutrient',columns='recipe_name').value
   macronutrient = db_pivot.index
   recipe_name = db_pivot.columns
   #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/pivot_table.csv
-  db_pivot.to_csv("C:/Users/Janhavi Dubule/Desktop/BE Project/getFit/DataSetScraping/pivot_table.csv")
+  db_pivot.to_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/pivot_table.csv")
 
   similar_fooditem = db_pivot.corrwith(sample_fooditem)
   corr_fooditem = pd.DataFrame(similar_fooditem,columns=['pearsonR']).sort_values('pearsonR',ascending=False).head(10)
@@ -549,9 +549,24 @@ for item in dinnerDishMenu:
     break
 
 print("Total : ")
-print("Calories = ",total[0],)
-print("Carbohydrates = ",total[1]," (",round((total[1]*4.1/total[0])*100),"%)")
-print("Fats = ",total[2]," (",round((total[2]*8.8/total[0])*100),"%)")
-print("Protein = ",total[3]," (",round((total[3]*4.1/total[0])*100),"%)")
+print("Calories = ",total[0])
+carbs_percent = round((total[1]*4.1/total[0])*100)
+print("Carbohydrates = ",total[1]," (",carbs_percent,"%)")
+fats_percent = round((total[2]*8.8/total[0])*100)
+print("Fats = ",total[2]," (",fats_percent,"%)")
+protein_percent = round((total[3]*4.1/total[0])*100)
+print("Protein = ",total[3]," (",protein_percent,"%)")
 
-print(meal)
+dic = {'Calories' : total[0], 'Carbohydrates' : total[1], 'Carbs percentage' : carbs_percent, 'Proteins' : total[3], 'Proteins percent' : protein_percent, "Fats" : total[2], 'Fats percent' : fats_percent}
+#print(dic)
+
+output1 = open('myfile1.pkl','wb')
+pickle.dump(dic,output1)
+output1.close()
+model1 = pickle.load(open('myfile1.pkl','rb'))
+
+#print(meal)
+output2 = open('myfile2.pkl','wb')
+pickle.dump(meal,output2)
+output2.close()
+model2 = pickle.load(open('myfile2.pkl','rb'))
