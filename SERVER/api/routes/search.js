@@ -51,7 +51,7 @@ mongoClient.connect(url, (err,db)=>{
                     // res.status(200).send(result)
                     recipe_details.calories = result[0].nutrition_facts.calories
                     recipe_details.carbohydrates = result[0].nutrition_facts.carbohydrates
-                    recipe_details.fats = result[0].nutrition_facts.fats
+                    recipe_details.fats = result[0].nutrition_facts.fat
                     recipe_details.protein = result[0].nutrition_facts.protein
                     recipe_details.img_url = result[0].img_url
                     res.status(200).send(recipe_details)
@@ -67,7 +67,7 @@ mongoClient.connect(url, (err,db)=>{
                         if(foodItem == recipe.recipe_name){
                             recipe_details.calories = recipe.nutrition_facts.calories
                             recipe_details.carbohydrates = recipe.nutrition_facts.carbohydrates
-                            recipe_details.fats = recipe.nutrition_facts.fats
+                            recipe_details.fats = recipe.nutrition_facts.fat
                             recipe_details.protein = recipe.nutrition_facts.protein    
                             recipe_details.img_url = recipe.img_url                       
                         }
