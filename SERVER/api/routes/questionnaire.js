@@ -45,10 +45,11 @@ mongoClient.connect(url, (err,db)=>{
                                         breakfastMeals : breakfastMeals,
                                         lunchMeals : lunchMeals,
                                         dinnerMeals : dinnerMeals } };
+
             collection.updateOne(query, detailsToAdd, function(err, res) {
               if (err) throw err;
               console.log("Details Added");
-              db.close();
+            //   db.close();
             });
 
             

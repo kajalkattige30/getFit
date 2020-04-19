@@ -12,9 +12,8 @@ mongoClient.connect(url, (err,db)=>{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
 
-        router.get('getPlan/:email',(req,res) =>{
+        router.get('/getPlan/:email',(req,res) =>{
             const query = {email : req.params.email}
-            const mealType = req.params.mealType
             console.log(query)
             collection.find(query,{projection: {_id:0,plan : 1}}).toArray((err,result)=>{
                 // data = result
@@ -26,10 +25,10 @@ mongoClient.connect(url, (err,db)=>{
 
         })
 
-        router.get('setPlan/:email',(req,res) =>{
+        router.post('/setPlan/:email',(req,res) =>{
             const query = {email : req.params.email}
             newvalues = { $set: {plan : req.body.plan } };
-            const mealType = req.params.mealType
+            console.log(newvalues);
             console.log(query)
             collection.updateOne(query, newvalues, function(err, resultUpdate) {
                 if (err) throw err;
