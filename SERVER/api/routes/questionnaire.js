@@ -23,7 +23,7 @@ mongoClient.connect(url, (err,db)=>{
                 goal_weight : req.body.goal_weight,
                 bmi : req.body.bmi,
                 bmr : req.body.bmr,
-                calorieCount : req.body.calorieCount
+                calorieCount : req.body.calorieCount,
             }
             console.log(existingUser)
             const query = {email : existingUser.email}
@@ -41,6 +41,7 @@ mongoClient.connect(url, (err,db)=>{
                                         bmi : existingUser.bmi,
                                         bmr : existingUser.bmr,
                                         calorieCount : existingUser.calorieCount,
+                                        plan : "NoPlan",
                                         breakfastMeals : breakfastMeals,
                                         lunchMeals : lunchMeals,
                                         dinnerMeals : dinnerMeals } };
