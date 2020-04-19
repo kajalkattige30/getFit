@@ -15,6 +15,7 @@ const searchRoutes = require('./api/routes/search');
 const addMealRoutes = require('./api/routes/addMeal');
 const getMealRoutes = require('./api/routes/getMeal');
 const nodeFlaskRoutes = require('./api/routes/nodeFlask');
+const planRoutes = require('./api/routes/plan')
 
 app.use(express.json())
 
@@ -32,6 +33,7 @@ app.use('/search',searchRoutes);
 app.use('/addMeal',addMealRoutes);
 app.use('/getMeal',getMealRoutes);
 app.use('/nodeFlask',nodeFlaskRoutes);
+app.use('/plan',planRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');
