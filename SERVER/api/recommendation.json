@@ -1,0 +1,48 @@
+{
+  "Breakfast": [],
+  "Lunch": [
+    {
+      "recipe_name": "Quick Whole Wheat Chapati",
+      "servings": 2,
+      "calories": 254.0,
+      "carbs": 54.4,
+      "fats": 1.4,
+      "protein": 10.2
+    },
+    {
+      "recipe_name": "Aloo Matar",
+      "servings": 1,
+      "calories": 487.0,
+      "carbs": 81.7,
+      "fats": 14.5,
+      "protein": 9.0
+    }
+  ],
+  "Dinner": [
+    {
+      "recipe_name": "Quick Whole Wheat Chapati",
+      "servings": 2,
+      "calories": 254.0,
+      "carbs": 54.4,
+      "fats": 1.4,
+      "protein": 10.2
+    },
+    {
+      "recipe_name": "Curry in a Hurry",
+      "servings": 1,
+      "calories": 505.0,
+      "carbs": 73.1,
+      "fats": 10.7,
+      "protein": 29.5
+    }
+  ],
+  "total": {
+    "Calories": 1500.0,
+    "Carbohydrates": 263.6,
+    "Carbs percentage": 72.0,
+    "Proteins": 58.9,
+    "Proteins percent": 16.0,
+    "Fats": 28.0,
+    "Fats percent": 16.0
+  }
+}

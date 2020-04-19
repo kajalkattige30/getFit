@@ -14,15 +14,16 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import json
 # from sklearn.neighbors import NearestNeighbors
 # from scipy.sparse import csr_matrix
 import random
 from numpy.random import choice
-import pickle
+#import pickle
 
 #Importing dataset
-# dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
 dataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
+#dataset = pd.read_csv("C:\Users\kkatt\Documents\BE_Project\getFit\DataSetScraping\dataset.csv", sep = ',', error_bad_lines=False,encoding='utf-8')
 
 #Creating PivotDatabase
 def createPivotDatabase(categories):
@@ -32,7 +33,7 @@ def createPivotDatabase(categories):
 
       next(csv_reader)
       #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv
-      with open("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/PivotDataset.csv",'w', newline = '', encoding='utf-8') as new_file:
+      with open("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv",'w', newline = '', encoding='utf-8') as new_file:
         fieldnames = ['macronutrient','recipe_name','value']
         csv_writer = csv.DictWriter(new_file,fieldnames=fieldnames)
         csv_writer.writeheader()
@@ -50,13 +51,13 @@ def createPivotDatabase(categories):
 
 def getCorrelation(sample_fooditem):
   #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv
-  pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
+  pivotdataset = pd.read_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/PivotDataset.csv", skiprows=0, sep = ',', error_bad_lines=False,encoding='utf-8')
   pivotdataset.drop_duplicates(keep = 'first', inplace = True)
   db_pivot = pivotdataset.pivot(index='macronutrient',columns='recipe_name').value
   macronutrient = db_pivot.index
   recipe_name = db_pivot.columns
   #C:/Users/kkatt/Documents/BE_Project/DataSetScraping/pivot_table.csv
-  db_pivot.to_csv("C:/Users/kkatt/Documents/BE_Project/getFit/DataSetScraping/pivot_table.csv")
+  db_pivot.to_csv("C:/Users/kkatt/Documents/BE_Project/DataSetScraping/pivot_table.csv")
 
   similar_fooditem = db_pivot.corrwith(sample_fooditem)
   corr_fooditem = pd.DataFrame(similar_fooditem,columns=['pearsonR']).sort_values('pearsonR',ascending=False).head(10)
@@ -82,7 +83,13 @@ def getCorrelation(sample_fooditem):
 
 
 #All required Variables
-requiredCalories = 0
+with open("C:/Users/kkatt/Documents/BE_Project/getFit/SERVER/dataToMl.json") as f:
+  cals = json.load(f)
+
+#print(cals)
+
+requiredCalories = float(cals['calorieCount'])
+print(requiredCalories)
 
 breakfastCals = 0
 lunchCals = 0
@@ -107,18 +114,18 @@ dinnerRiceMenu = []
 
 #Sample User - this user data to be fetched from nodejs Server - only required Calories and plan type.
 
-def getReqCalories():
-  global requiredCalories
-  gender = 'female'
-  age = 21
-  height = 180
-  weight = 80
-  goal = 'gain-weight'
-  pace = 'slow'
-  if(gender == 'female'):
-    requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) - 161
-  else:
-    requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) + 5
+# def getReqCalories():
+#   global requiredCalories
+#   gender = 'female'
+#   age = 21
+#   height = 180
+#   weight = 80
+#   goal = 'gain-weight'
+#   pace = 'slow'
+#   if(gender == 'female'):
+#     requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) - 161
+#   else:
+#     requiredCalories = (height*6.25) + (weight*9.99) - (21*4.92) + 5
 
 #Method 2
 #Randomly dividing total Calories into Breakfast, Lunch and Dinner Cals 
@@ -390,7 +397,7 @@ Meal Recommendation Below
 
 '''
 
-getReqCalories()
+#getReqCalories()
 
 print("Req Cal",requiredCalories)
 
@@ -560,13 +567,13 @@ print("Protein = ",total[3]," (",protein_percent,"%)")
 dic = {'Calories' : total[0], 'Carbohydrates' : total[1], 'Carbs percentage' : carbs_percent, 'Proteins' : total[3], 'Proteins percent' : protein_percent, "Fats" : total[2], 'Fats percent' : fats_percent}
 #print(dic)
 
-output1 = open('myfile1.pkl','wb')
-pickle.dump(dic,output1)
-output1.close()
-model1 = pickle.load(open('myfile1.pkl','rb'))
+meal['total'] = dic
+#print(type(dic))
+#print(type(meal))
+print(meal)
 
-#print(meal)
-output2 = open('myfile2.pkl','wb')
-pickle.dump(meal,output2)
-output2.close()
-model2 = pickle.load(open('myfile2.pkl','rb'))
+# with open('dic.json', 'w') as outfile:
+#   json.dump(dic,outfile)
+
+with open('C:/Users/kkatt/Documents/BE_Project/getFit/SERVER/meal.json', 'w') as outfile:
+  json.dump(meal,outfile)
