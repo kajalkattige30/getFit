@@ -1,0 +1,1 @@
+{"Calories": 1805.0, "Carbohydrates": 305.8, "Carbs percentage": 69.0, "Proteins": 51.7, "Proteins percent": 12.0, "Fats": 48.0, "Fats percent": 23.0}

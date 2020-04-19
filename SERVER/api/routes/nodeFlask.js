@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mongoClient = require('mongodb').MongoClient;
+const request = require('request-promise');
+const fs = require('fs')
+
 const url = "mongodb+srv://Janhavi:mongodb@projectcluster-azpnv.mongodb.net/test?retryWrites=true&w=majority";
 
 mongoClient.connect(url, (err,db)=>{
@@ -19,25 +22,32 @@ mongoClient.connect(url, (err,db)=>{
                 }
                 console.log(nodeToFlask)
 
+                var data = JSON.stringify(nodeToFlask)
+                fs.writeFileSync('dataToMl.json',data)
+
                 var options = {
                     method: 'POST',
-                    uri: 'http://localhost:3000/nodeFlask/demo@gmail.com',
+                    uri: 'http://127.0.0.1:5000/',
                     body: nodeToFlask,
                     json: true // Automatically stringifies the body to JSON
                 };
 
                 var returndata;
-                var sendrequest = request(options)
-                .then(function (parsedBody) {
-                    console.log(parsedBody); // parsedBody contains the data sent back from the Flask server
-                    returndata = parsedBody; // do something with this data, here I'm assigning it to a variable.
-                })
-                .catch(function (err) {
-                    console.log(err);
-                });
-                
-                res.status(200).send(JSON.stringify(returndata))
-                
+                var recommended_meals;
+                // var sendrequest = request(options).then(function (parsedBody) {
+                //     // console.log(parsedBody); // parsedBody contains the data sent back from the Flask server
+                //     returndata = parsedBody; // do something with this data, here I'm assigning it to a variable.
+                // })
+                // .catch(function (err) {
+                //     console.log(err);
+                // });
+               
+
+                returndata = fs.readFileSync("C:/Users/kkatt/Documents/BE_Project/getFit/SERVER/api/recommendation.json");
+                recommended_meals = JSON.parse(returndata);
+                //C:/Users/kkatt/Documents/BE_Project/getFit/SERVER/api/recommendation.json
+                console.log(recommended_meals)
+                res.status(200).send(JSON.stringify(recommended_meals))
 
             })
           
