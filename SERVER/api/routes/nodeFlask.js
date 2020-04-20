@@ -27,21 +27,23 @@ mongoClient.connect(url, (err,db)=>{
 
                 var options = {
                     method: 'POST',
-                    uri: 'http://127.0.0.1:5000/',
+                    uri: 'http://127.0.0.1:5000/nodeFlask',
                     body: nodeToFlask,
                     json: true // Automatically stringifies the body to JSON
                 };
 
                 var returndata;
                 var recommended_meals;
-                // var sendrequest = request(options).then(function (parsedBody) {
-                //     // console.log(parsedBody); // parsedBody contains the data sent back from the Flask server
-                //     returndata = parsedBody; // do something with this data, here I'm assigning it to a variable.
-                // })
-                // .catch(function (err) {
-                //     console.log(err);
-                // });
-               
+                var sendrequest = request(options).then(function (parsedBody) {
+                    // console.log(parsedBody); // parsedBody contains the data sent back from the Flask server
+                    returndata = parsedBody;
+                    console.log("This is Parsed Body")
+                    console.log(returndata)
+                    // do something with this data, here I'm assigning it to a variable.
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
 
                 returndata = fs.readFileSync("C:/Users/kkatt/Documents/BE_Project/getFit/SERVER/api/recommendation.json");
                 recommended_meals = JSON.parse(returndata);
