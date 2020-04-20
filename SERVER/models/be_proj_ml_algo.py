@@ -446,10 +446,10 @@ for item in breakfastmenu:
 
   itemDict['recipe_name'] = item[0]
   itemDict['servings'] = servings
-  itemDict['calories'] = item[1]*servings
-  itemDict['carbs'] = carbs*servings
-  itemDict['fats'] = fats*servings
-  itemDict['protein'] = protein*servings
+  itemDict['calories'] = float(item[1]*servings)
+  itemDict['carbs'] = float(carbs*servings)
+  itemDict['fats'] = float(fats*servings)
+  itemDict['protein'] = float(protein*servings)
   meal['Breakfast'].append(itemDict)
 
   print("Breakfast\t"+item[0]+"\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
@@ -472,10 +472,10 @@ for item in lunchBreadMenu:
 
     itemDict['recipe_name'] = item[0]
     itemDict['servings'] = servings
-    itemDict['calories'] = item[1]*servings
-    itemDict['carbs'] = carbs*servings
-    itemDict['fats'] = fats*servings
-    itemDict['protein'] = protein*servings
+    itemDict['calories'] = float(item[1]*servings)
+    itemDict['carbs'] = float(carbs*servings)
+    itemDict['fats'] = float(fats*servings)
+    itemDict['protein'] = float(protein*servings)
     meal['Lunch'].append(itemDict)
 
     print("Lunch\t\t"+item[0]+"\t\t\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
@@ -498,10 +498,10 @@ for item in lunchDishMenu:
     itemDict = dict()
     itemDict['recipe_name'] = item[0]
     itemDict['servings'] = servings
-    itemDict['calories'] = item[1]*servings
-    itemDict['carbs'] = carbs*servings
-    itemDict['fats'] = fats*servings
-    itemDict['protein'] = protein*servings
+    itemDict['calories'] = float(item[1]*servings)
+    itemDict['carbs'] = float(carbs*servings)
+    itemDict['fats'] = float(fats*servings)
+    itemDict['protein'] = float(protein*servings)
     meal['Lunch'].append(itemDict)
 
     print("\t\t"+item[0]+"\t\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
@@ -522,10 +522,10 @@ for item in dinnerBreadMenu:
     itemDict = dict()
     itemDict['recipe_name'] = item[0]
     itemDict['servings'] = servings
-    itemDict['calories'] = item[1]*servings
-    itemDict['carbs'] = carbs*servings
-    itemDict['fats'] = fats*servings
-    itemDict['protein'] = protein*servings
+    itemDict['calories'] = float(item[1]*servings)
+    itemDict['carbs'] = float(carbs*servings)
+    itemDict['fats'] = float(fats*servings)
+    itemDict['protein'] = float(protein*servings)
     meal['Dinner'].append(itemDict)
 
     print("Dinner\t\t"+item[0]+"\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
@@ -547,10 +547,10 @@ for item in dinnerDishMenu:
     itemDict = dict()
     itemDict['recipe_name'] = item[0]
     itemDict['servings'] = servings
-    itemDict['calories'] = item[1]*servings
-    itemDict['carbs'] = carbs*servings
-    itemDict['fats'] = fats*servings
-    itemDict['protein'] = protein*servings
+    itemDict['calories'] = float(item[1]*servings)
+    itemDict['carbs'] = float(carbs*servings)
+    itemDict['fats'] = float(fats*servings)
+    itemDict['protein'] = float(protein*servings)
     meal['Dinner'].append(itemDict)
 
     print("\t\t"+item[0]+"\t\t\t"+item[2]+"\t"+str(item[1]*servings)+"\t\t"+str(carbs*servings)+"\t"+str(fats*servings)+"\t"+str(protein*servings))
