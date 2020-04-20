@@ -565,7 +565,7 @@ print("Fats = ",total[2]," (",fats_percent,"%)")
 protein_percent = round((total[3]*4.1/total[0])*100)
 print("Protein = ",total[3]," (",protein_percent,"%)")
 
-dic = {'Calories' : total[0], 'Carbohydrates' : total[1], 'Carbs percentage' : carbs_percent, 'Proteins' : total[3], 'Proteins percent' : protein_percent, "Fats" : total[2], 'Fats percent' : fats_percent}
+dic = {'Calories' : float(total[0]), 'Carbohydrates' : float(total[1]), 'Carbs percentage' : float(carbs_percent), 'Proteins' : float(total[3]), 'Proteins percent' : float(protein_percent), "Fats" : float(total[2]), 'Fats percent' : float(fats_percent)}
 #print(dic)
 
 meal['total'] = dic
