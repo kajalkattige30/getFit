@@ -1,0 +1,40 @@
+{
+  "Breakfast": [
+    {
+      "recipe_name": "Kachori With Fresh Peas",
+      "servings": 1,
+      "calories": 382.0,
+      "carbs": 59.9,
+      "fats": 13.7,
+      "protein": 10.4
+    }
+  ],
+  "Lunch": [
+    {
+      "recipe_name": "Quick Whole Wheat Chapati",
+      "servings": 2,
+      "calories": 254.0,
+      "carbs": 54.4,
+      "fats": 1.4,
+      "protein": 10.2
+    },
+    {
+      "recipe_name": "Spicy Lentil Quinoa Curry",
+      "servings": 1,
+      "calories": 413.0,
+      "carbs": 62.1,
+      "fats": 10.5,
+      "protein": 19.8
+    }
+  ],
+  "Dinner": [],
+  "total": {
+    "Calories": 1049.0,
+    "Carbohydrates": 176.4,
+    "Carbs percentage": 69.0,
+    "Proteins": 40.400000000000006,
+    "Proteins percent": 16.0,
+    "Fats": 25.6,
+    "Fats percent": 21.0
+  }
+}

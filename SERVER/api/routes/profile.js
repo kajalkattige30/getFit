@@ -11,26 +11,22 @@ mongoClient.connect(url, (err,db)=>{
         const myDB = db.db('ProjectDB')
         const collection = myDB.collection('user')
 
-        router.put('/', (req,res) => {
+        router.put('/:email', (req,res) => {
             const existingUser = {
-                email : req.body.email,
                 name : req.body.name,
                 height : req.body.height,
                 current_weight : req.body.current_weight,
                 activity_level : req.body.activity_level,
-                gender : req.body.gender,
                 age : req.body.age,
                 goal_weight : req.body.goal_weight,
-                bmi : req.body.bmi,
-                bmr : req.body.bmr,
-                calorieCount : req.body.calorieCount
+                
             }
             console.log(existingUser)
-            const query = {email : existingUser.email}
+            const query = {email : req.params.email}
             var updatedDetails = { $set: {height: existingUser.height,
+                                          name : existingUser.name,
                                           current_weight : existingUser.current_weight,
                                           activity_level: existingUser.activity_level,
-                                          gender: existingUser.gender,
                                           age: existingUser.age,
                                           goal_weight: existingUser.goal_weight,
                                            
@@ -43,7 +39,7 @@ mongoClient.connect(url, (err,db)=>{
                 console.log("Details updated!")
             });
             
-            res.status(200).send(JSON.stringify(existingUser))
+            res.status(200).send()
 
         })
         router.get('/:email',(req,res) =>{
