@@ -29,4 +29,4 @@ Used k-means clustering algorithm for dividing the dataset into different cluste
 
 • Flask server
 
-• Python machine learning model
+• Python (machine learning model, BeautifulSoup)
